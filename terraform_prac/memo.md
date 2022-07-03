@@ -94,6 +94,9 @@ local variables ("locals" syntax) cannot be overwritten in runtime.
 Terraform can be used not only in AWS but also in GCP, Azure and so on. This is achieved by "Provider".
 
 
+### Module
+Before you use "module", you have to do `terraform get` or `terraform init` command
+
 
 
 
@@ -103,6 +106,10 @@ Terraform can be used not only in AWS but also in GCP, Azure and so on. This is 
 ## Memo
 - AMI: Amazon Machine Image
 - HCL: HachiCorp Configuration Language
+
+### CLI
+- Only 'yes' will be accepted to confirm.
+
 
 ## Questions
 - How(Where) to get ami number?
