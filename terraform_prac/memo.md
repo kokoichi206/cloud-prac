@@ -61,4 +61,27 @@ git config --global init.templatedir '~/.git-templates/git-secrets'
 ```
 
 
+## Basic Operations
+``` sh
+terraform init
+terraform plan
+terraform apply
+```
 
+[Create default VPC](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/default-vpc.html#create-default-vpc)
+
+```
+aws ec2 create-default-vpc
+```
+
+
+
+
+
+
+## Memo
+- AMI: Amazon Machine Image
+- HCL: HachiCorp Configuration Language
+
+## Questions
+- How(Where) to get ami number?
