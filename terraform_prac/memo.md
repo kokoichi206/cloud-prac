@@ -106,6 +106,7 @@ Before you use "module", you have to do `terraform get` or `terraform init` comm
 ## Memo
 - AMI: Amazon Machine Image
 - HCL: HachiCorp Configuration Language
+- arn: Amazon Resource Name
 
 ### CLI
 - Only 'yes' will be accepted to confirm.

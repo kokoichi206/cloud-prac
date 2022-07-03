@@ -75,6 +75,37 @@ ACM は煩雑な SSL 証明書の管理を担ってくれるマネージドサ�
 ALB がリクエストをフォワードする対象を「ターゲットグループ」と呼ぶ。
 
 
+### コンテナオーケストレーション in AWS
+ECS or EKS
+「EC2起動タイプ」or「Fargate起動タイプ」
+
+ECSクラスタは、Docker コンテナを実行するホストサーバーを、論理的に束ねるリソース。
+
+### ECSサービス
+通常、コンテナはタスクが完了したらすぐに終了する。
+そうならないための ECS サービス。何らかの理由でタスクが終了してしまった場合、自動的に新しいタスクを起動してくれる機能付き。
+
+また、ECS サービスは ALB との橋渡し役にもなる。
+インターネットからのリクエストは ALB で受け、そのリクエストをコンテナにフォワードする。
+
+### Fargate
+Fargate ではホストサーバーにログインできず、コンテナのログを直接確認できない。
+そこで、CloudWatch Logs と連携し、ログを記録できるようにする。
+
+
+### ECS タスク実行 IAM ロール
+[AmazonECSTaskExecutionRolePolicy](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/task_execution_IAM_role.html)は AWS が管理しているポリシー。
+CloudWatch Logs や ECR の操作権限を持つ。
+
+### CloudWatch Logs
+Docker コンテナが CloudWatch Logs にログを投げられるようにもする必要がある。
+
+awslogs-group の部分には CloudWatch Logs のグループ名を指定する
+
+``` sh
+aws logs filter-log-events --log-group-name /ecs/example
+```
+
 
 
 
