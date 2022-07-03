@@ -66,6 +66,7 @@ git config --global init.templatedir '~/.git-templates/git-secrets'
 terraform init
 terraform plan
 terraform apply
+terraform destroy
 ```
 
 [Create default VPC](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/default-vpc.html#create-default-vpc)
@@ -73,6 +74,26 @@ terraform apply
 ```
 aws ec2 create-default-vpc
 ```
+
+「既存リソースをそのまま変更する」ケースか「リソースが作り直しになる」ケースかは常に確認する！
+
+
+## Basic Syntax
+
+### variable
+u can override the variables in .tf file like this.
+
+``` sh
+terraform plan -var 'example_instance_type=t3.nano'
+```
+
+local variables ("locals" syntax) cannot be overwritten in runtime.
+
+
+### Provider
+Terraform can be used not only in AWS but also in GCP, Azure and so on. This is achieved by "Provider".
+
+
 
 
 
@@ -85,3 +106,7 @@ aws ec2 create-default-vpc
 
 ## Questions
 - How(Where) to get ami number?
+
+### Terraform
+- engress, ingress
+- protocol = "-1"
