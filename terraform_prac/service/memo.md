@@ -47,6 +47,35 @@ aws_subnet と aws_route_table_association を変更する。
 OS へ到達する前にネットワークレベルでパケットをフィルタリングできる。
 
 
+### ALB: Application Load Balancer
+default_action の type は、主に次の３つある
+
+- forward
+    - リクエストを別のターゲットグループに転送
+- fixed-response
+    - 固定の HTTP レスポンスを応答
+- redirect
+    - 別の URL にリダイレクト
+
+
+### Route53
+ドメインの登録はさすがに terraform ではできないので、各自で済ませてもろて
+
+CNAME レコードは「ドメイン名⇨CNAMEレコードのドメイン名⇨IPアドレス」、ALIASレコードは「ドメイン名⇨IPアドレス」という流れで名前解決、パフォーマンスが高い。
+
+
+### ACM: AWS Certificate Manager
+SSL 証明書を、ACM で作成する。
+ACM は煩雑な SSL 証明書の管理を担ってくれるマネージドサービスで、ドメイン検証をサポートしている。
+
+サブドメインに対しても証明書を発行させることができて、「*.example.com」のようにして**ワイルドカード証明書**とする！
+
+
+### 任意のターゲットへリクエストをフォワード
+ALB がリクエストをフォワードする対象を「ターゲットグループ」と呼ぶ。
+
+
+
 
 
 
