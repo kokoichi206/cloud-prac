@@ -104,4 +104,109 @@ ALB ターゲットグループに ECS タスクを登録しておくと、ECS �
 メンテナンス時の Sorry コンテンツ、Sorry ページ。ALB リスなルールの優先度を変更することで可能。
 
 
+## sec 4
+デフォルト VPC はデフォルトルートの宛先が Any(0.0.0.0/0) となっており、プロダクション環境のネットワーク設定として使うには不十分。せってミスを防ぐためにも、アカウント作成後にデフォルト VPC を削除する人も多い！
 
+[使わせてモらた cloudformation](https://github.com/uma-arai/sbcntr-resources/blob/main/cloudformations/network_step1.yml)
+
+### Cloud9
+マネジメント用のコンソール用意。慣れてる人はローカルでよい。
+Cloud9 の実態は EC2 インスタンス。
+
+Cloud9 はデフォルトではログインした AWS ユーザーの権限で自動的に認証権限が設定される仕組みがある！
+
+AWS Managed TEmporary Credentials (AMTC)
+
+### サンプルのアプリ用意
+```
+git clone https://github.com/uma-arai/sbcntr-frontend.git
+
+node -v
+npm i -g nvm
+
+nvm ls-remote | grep v14.16.1
+nvm install v14.16.1
+nvm alias default v14.16.1
+node -v
+
+npm i -g yarn
+
+cd /home/ec2-user/environment/sbcntr-frontend/
+yarn install --pure-lockfile --production
+
+npx blitz -v
+```
+
+```
+cd /home/ec2-user/environment/
+git clone https://github.com/uma-arai/sbcntr-backend.git
+cd /home/ec2-user/environment/sbcntr-backend/
+```
+
+本来、フロントエンドとバックエンドのアプリケーションは別サブネットにおくことが多いが、今回はわかりやすさのために同一サブネットにしている。
+
+### ECR
+KMS 暗号化を有効に。
+ECR は VPC 内ではなくリージョンごとに存在するリージョンサービスなため、VPC 内の管理サーバ上から ECR にアクセスするためには、インターネット向けの Outbound 通信が可能か、VPC エンドポイントによる内部アクセスが必要となる。
+
+エンドポイントには以下サービスが必要
+
+- インタフェース型
+    - ecr.api
+    - ecr.dkr
+- ゲートウェイ型
+    - com....s3
+
+``` sh
+# aws_account_id 等取得方法
+aws sts get-caller-identity
+```
+
+Cloud9 で提供されている AMTC を OFF にし、VPC エンドポイント経由で操作できるように準備。
+
+### コンテナアプリケーションの登録
+``` sh
+docker image rm -f $(docker image ls -q)
+docker image ls
+
+cd xxx-backend
+docker image build -t sbcntr-backend:v1 .
+
+docker image ls --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}"
+```
+
+ECR 内のコンテナイメージを AWS アカウントごとに識別している関係上、IMAGE ID として**決められた形式**で登録する必要がある！
+
+``` sh
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+
+docker image tag sbcntr-backend:v1 ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+docker image ls --format "table {{.ID}}\t{{.Repository}}\t{{.Tag}}"
+```
+
+``` sh
+# 
+aws configure
+# ECR への等小禄は Docker CLI ベースで実施
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend
+
+aws ecr --region ap-northeast-1 get-login-password | docker login --username AWS --password-stdin https://${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend
+
+
+
+docker image push ${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/sbcntr-backend:v1
+```
+
+ECRリポジトリでDockerクライアント認証がエラーになってしまうので、１回保留。
+terraform の方をやる。
+
+
+
+
+
+
+
+
+
+## メモ
+- GA: (General Availability:一般利用可能)
