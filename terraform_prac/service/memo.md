@@ -106,6 +106,33 @@ awslogs-group の部分には CloudWatch Logs のグループ名を指定する
 aws logs filter-log-events --log-group-name /ecs/example
 ```
 
+### バッチ
+「アプリケーションレベルでどこまで制御し、ジョブ管理システムでどこまでサポートするか」について、しっかり設計する必要がある。
+
+重要な観点
+
+- ジョブ管理
+    - 起動タイミング
+- エラーハンドリング
+    - エラー通知
+    - ロギング
+- リトライ
+    - リトライできるアプリケーション設計
+- 依存関係の制御
+    - job A の後に job B をやらなければならない、など
+
+### ジョブ管理システム
+システムが成長すると cron では限界がきて Rundeck や JP1 などが使われるようになる。
+
+### ECS Scheduled Tasks
+ある程度の規模までであれば ECS Scheduled Tasks で代用可能。
+エラーハンドリングやリトライはアプリケーションレベルで実装する必要があり、依存関係制御もできない。
+
+### CloudWatch イベントから ECS を起動する
+AmazonEC2ContainerServiceEventsRole ポリシーを持った IAM ロールの作成
+
+schedule_expression は cron 式と rate 式をサポートしている。
+cron のタイムゾーンは UTC！
 
 
 
