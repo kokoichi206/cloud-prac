@@ -134,6 +134,11 @@ AmazonEC2ContainerServiceEventsRole ポリシーを持った IAM ロールの作
 schedule_expression は cron 式と rate 式をサポートしている。
 cron のタイムゾーンは UTC！
 
+### KMS: Key Management Service
+エンベロープ暗号化。
+カスタマーマスターキーの自動生成したデータキーを使用し、暗号化と復号。
+
+
 
 
 
