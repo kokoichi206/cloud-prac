@@ -98,6 +98,49 @@ Terraform can be used not only in AWS but also in GCP, Azure and so on. This is 
 Before you use "module", you have to do `terraform get` or `terraform init` command
 
 
+### RDS
+`my.cnf` (MySQL) に定義するようなデータベースの設定は、DB パラメータグループに記述
+
+RDS や ElastiCache の apply は時間がかかる。
+
+
+### ECR
+Docker クライアントの認証
+
+``` sh
+# 「Error saving credentials: error storing credentials - err: exit status 1,」
+# と出たときは "~/.docker/config.json" の内容を一部削除する。
+# https://techblog.recochoku.jp/6190
+$(aws ecr get-login --region $AWS_DEFAULT_REGION --no-include-email)
+# docker イメージの指定方法。。。
+docker push XXXXXX.dkr.ecr.ap-northeast-1.amazonaws.com/example:latest
+```
+
+
+### CodeBuild
+CodeBuild が使用する IAM ロールの持つ権限
+
+- ビルド出力アーティファクトを保存するための S3 操作権限
+- ビルドログを出力する為の CloudWatch Logs 操作権限
+- Docker イメージをプッシュするための ECR 操作権限
+
+CodeBuild のビルド処理を規定するのが「buildspec.yml」であり、アプリケーションコードのプロジェクトルートに配置する！（Dockerfile と同じ部分）
+
+``` sh
+export GITHUB_TOKEN=XXXXXXXX
+```
+
+### CodePipeline
+3 つのステージからなる
+
+1. Source: Github からソースコードを取得する
+2. Build: CodeBuild を実行し、ECR に Docker イメージをプッシュする
+3. Deploy: ECS へ Docker イメージをデプロイする
+
+秘密鍵が tf ファイルに平文で書き込まれる問題は、**一回断念して諦めるしかない！**そのあと上書きする。
+
+### GitHub Webhook
+CodePipeline では Webhook のリソースを、通知する側とされる側のそれぞれで実装する！
 
 
 
