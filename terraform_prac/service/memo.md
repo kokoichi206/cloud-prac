@@ -139,6 +139,83 @@ cron のタイムゾーンは UTC！
 カスタマーマスターキーの自動生成したデータキーを使用し、暗号化と復号。
 
 
+### 設定管理
+ECSのようなコンテナ環境では、設定をコンテナ起動時に注入する。実行環境ごとに異なる設定の例
+
+- DB のホスト名・ユーザー名・パスワード
+- Twitter, Facebook などの外部サービスのクレデンシャル
+- 管理者あてのメールアドレス
+
+### SSM パラメータストア
+平文
+
+``` sh
+# 平文で保存するときは --type String をつける
+aws ssm put-parameter --name 'plain_name' --value 'plain value' --type String
+# 表示されるメッセージ
+{
+    "Version": 1,
+    "Tier": "Standard"
+}
+# 参照する
+aws ssm get-parameter --output text --name 'plain_name' --query Parameter.Value
+
+# 値を更新するときは --overwrite オプション必須
+aws ssm put-parameter --name 'plain_name' --type String --value 'modified value' --overwrite
+# バージョンが上がった！
+{
+    "Version": 2,
+    "Tier": "Standard"
+}
+```
+
+暗号化
+
+``` sh
+# --type SecureString をつける
+aws ssm put-parameter --name 'encryption_name' --value 'encryption value' --type SecureString
+# 表示されるメッセージ
+{
+    "Version": 1,
+    "Tier": "Standard"
+}
+# 参照する
+aws ssm get-parameter --output text --query Parameter.Value --name 'encryption_name' --with-decryption
+aws ssm get-parameter --output text --query Parameter.Value --name 'encryption_name'
+```
+
+SSM パラメータストアのアチアを、ECS の Docker コンテナ内で環境変数として参照する！
+平文の値と暗号化した値は透過的に扱うことができ、ECS で意識する必要はない。
+**ECS から SSM パラメータストアの値を参照する権限**は必要。
+
+``` terraform
+# 権限の付与
+data "aws_iam_policy_document" "ecs_task_execution" {
+  source_json = data.aws_iam_policy.ecs_task_execution_role_policy.policy
+
+  statement {
+    effect    = "Allow"
+    actions   = ["ssm:GetParameters", "kms:Decrypt"]
+    resources = ["*"]
+  }
+}
+```
+
+ECS のコンテナで使うときは valueFrom で SSM パラメータストアのキー名を設定する。
+魔法感がして好きじゃない。。。
+
+``` terraform
+"secrets": [
+    {
+        "name": "DB_USERNAME",
+        "valueFrom": "/db/username"
+    },
+    {
+        "name": "DB_PASSWORD",
+        "valueFrom": "/db/password"
+    }
+]
+```
 
 
 
