@@ -143,6 +143,38 @@ export GITHUB_TOKEN=XXXXXXXX
 CodePipeline では Webhook のリソースを、通知する側とされる側のそれぞれで実装する！
 
 
+### SSH レスオペレーション
+Session Manager を導入し、SSH ログインを不要にする。「SSH の鍵管理」も「SSH のポート解放」も行わない。
+また、Session Manager で全ての操作ログを保存できる。コマンドの実行結果も自動的に残せる。
+Amazon Linux2 には最初からインストール済み。
+
+### インスタンスプロファイル
+AWS のサービスに権限を付与する場合、これまでは IAM ロールを関連づけてきた。
+しかし EC2 は特殊で、直接 IAM ロールを関連づけできない。かわりに、IAM ロールをラップしたインスタンスプロファイルを関連づけて権限を付与する。
+
+### Session Manager
+Session Manager 用の AmazonSSMManagedInstanceCore ポリシーをベースにしつつ、S3バケトット CloudWatch Logs への書き込み権限を付与する。
+SSMパラメータストアと ECR への参照権限。
+
+Session Manager の操作ログを自動保存するためには SSM Document を作成する必要がある。ログの保存先には S3 バケットと CloudWatch Logs を指定可能。
+
+### ローカル環境
+Session Manager を使うために、Session Manager Plugin のインストールが必要。
+
+``` sh
+# macOS での手順
+cd /tmp
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/mac/sessionmanager-bundle.zip" -o "sessionmanager-bundle.zip"
+unzip sessionmanager-bundle.zip
+sudo ./sessionmanager-bundle/install -i /usr/local/sessionmanagerplugin -b /usr/local/bin/session-manager-plugin
+rm -rf sessionmanager-bundle sessionmanager-bundle.zip
+
+## インストールの確認
+$ session-manager-plugin
+
+The Session Manager plugin was installed successfully. Use the AWS CLI to start a session.
+```
+
 
 
 
