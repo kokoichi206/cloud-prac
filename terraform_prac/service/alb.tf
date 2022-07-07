@@ -1,3 +1,10 @@
+# ALB のサービスアカウント
+data "aws_elb_service_account" "current" {}
+
+output "alb_service_account_id" {
+  value = data.aws_elb_service_account.current.id
+}
+
 resource "aws_lb" "main" {
   name = "main"
   # network for NLB

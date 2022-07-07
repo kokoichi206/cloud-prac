@@ -11,7 +11,8 @@ data "aws_iam_policy_document" "alb_log" {
 
     principals {
       type = "AWS"
-      identifiers = ["582318560864"]
+      identifiers = [data.aws_elb_service_account.current.id]
+      # identifiers = ["582318560864"]
     }
   }
 }

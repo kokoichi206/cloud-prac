@@ -218,6 +218,60 @@ find . -type f -name '*.tf' -exec dirname {} \; | sort -u |\
         - invalid instance type のチェックなど、AWS API を使った詳細なチェック
         - クレデンシャルの設定が必要
 
+### ベストプラクティス for AWS
+- ネットワーク系デフォルトリソースの使用を避ける！
+- データストア系デフォルトリソースの使用を避ける！
+- 暗黙的な依存関係を把握する
+    - リソースによっては、暗黙的に他のリソースに依存（EIP, NAT -> InternetGateway）
+    - 暗黙的な依存関係はドキュメントに記載があることが多い
+    - "depends_on" を定義して、依存関係を明示することで、正しい順番でリソース操作ができ、Terraform の動作が安定する
+        - プログラム都合？
+- 暗黙的に作られるリソースに注意する
+    - サービスにリンクされたロール（Service-Linked Role）という、IAM ロールの特殊版が存在する
+
+### 高度な構文
+- 三項演算子
+    - `instance_type = var.env == "prod" ? "m5.large" : "t3.micro"`
+    - `terraform plan -var 'env=stage'`
+- count というメタ引数による、複数リソース作成
+
+``` terraform
+resource "aws_vpc" "examples" {
+    count = 3
+    cidr_block = "10.${count.index}.0.0/16"
+}
+```
+
+- 主要なデータソース
+    - `data "aws_caller_identity" "current" {}`
+    - `data "aws_region" "current" {}`
+    - `data "aws_elb_service_account" "current" {}`
+    - ハードコードを減らそう！
+- 組み込み関数
+    - file
+    - `terraform console`
+    - cidrsubnet("10.1.0.0/16", 8, 3)
+    - Numeric Functions
+        - max, floor, pow
+    - String Functions
+        - substr, format, split
+    - Collection Functions
+        - flatten, concat, length
+    - Filesystem Functions
+
+``` sh
+#!/bin/bash
+# install.sh
+yum install -y ${package}
+```
+
+``` terraform
+templatefile("${path.module}/install.sh", { package = "httpd" })
+```
+
+- ランダム文字列
+    - Random プロバイダの random_string リソースを使う
+
 
 
 
