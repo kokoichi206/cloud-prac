@@ -158,6 +158,8 @@ SSMパラメータストアと ECR への参照権限。
 
 Session Manager の操作ログを自動保存するためには SSM Document を作成する必要がある。ログの保存先には S3 バケットと CloudWatch Logs を指定可能。
 
+SSH ログインなしに、シェルアクセスを実現するサービス。サーバーに専属のエージェントをインストールして、そのエージェント経由でコマンドを実行する。
+
 ### ローカル環境
 Session Manager を使うために、Session Manager Plugin のインストールが必要。
 
@@ -174,6 +176,17 @@ $ session-manager-plugin
 
 The Session Manager plugin was installed successfully. Use the AWS CLI to start a session.
 ```
+
+
+### Logging
+
+### ログの永続化
+CloudWatch Logs は便利だが、ストレージとしては割高。
+そこでログを S3 バケットに永続化する！ログ永続化は Kinesis Data Firehose と連携させることで実現。
+
+ECS -> CloudWatch Logs -> Kinesis Data Firehose -> S3
+
+
 
 
 
