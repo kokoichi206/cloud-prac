@@ -273,6 +273,46 @@ templatefile("${path.module}/install.sh", { package = "httpd" })
     - Random プロバイダの random_string リソースを使う
 
 
+### tfstate ファイル
+S3 バケット or Terraform Cloud で tfstate を管理する！
+
+### ステートバケット
+バージョニング・暗号化・パブリックアクセスを設定する！
+DynamoDB を組み合わせるとロックも可能！: ★TODO
+
+``` sh
+aws s3api create-bucket --bucket tfstate-pragmatic-terraform-kokoichi \
+--create-bucket-configuration LocationConstraint=ap-northeast-1
+# バージョニング
+aws s3api put-bucket-versioning --bucket tfstate-pragmatic-terraform-kokoichi \
+--versioning-configuration Status=Enabled
+# 暗号化
+aws s3api put-bucket-encryption --bucket tfstate-pragmatic-terraform-kokoichi \
+--server-side-encryption-configuration '{
+    "Rules": [
+        {
+            "ApplyServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+            }
+        }
+    ]
+}'
+# ブロックパブリックアクセス
+aws s3api put-public-access-block --bucket tfstate-pragmatic-terraform-kokoichi \
+--public-access-block-configuration '{
+    "BlockPublicAcls": true,
+    "IgnorePublicAcls": true,
+    "BlockPublicPolicy": true,
+    "RestrictPublicBuckets": true
+}'
+```
+
+[tfstate_s3.tf](service/tfstate_s3.tf) を記述し、`terraform init` をすると S3 バケットで tfstate が管理される！
+
+> 「Terraform で使用されるインフラストラクチャは、Terraform が管理するインフラストラクチャの外部に存在する必要がある」と公式には記述がある。ベストプラクティスは別の AWS アカウントに存在する S3 バケットを使用すること！これは **AWS Organizations を導入すれば実現可能！**
+
+
+
 
 
 ## Memo
