@@ -186,7 +186,37 @@ CloudWatch Logs は便利だが、ストレージとしては割高。
 
 ECS -> CloudWatch Logs -> Kinesis Data Firehose -> S3
 
+### ベストプラクティス
+- Terraform のバージョンを固定する
+- プロバイダバージョンを固定する
+    - 特に AWS プロバイダは進化が早く、環境差異が出やすい
+    - terraform init を忘れない
+- 削除操作を防止する
+    - lifecycle -> prevent_destroy
+- コードフォーマットをかける
+    - 標準で実装されている！
+    - `terraform fmt`
+    - `terraform fmt -recursive`
+    - `terraform fmt -recursive -check`
+- バリデーションをかける
+    - `terraform validate`
+    - 注: サブディレクトリ配下までは実行されない
+    - `terraform init` を事前に行う必要がある
+- オートコンプリートを有効にする
+    - `terraform -install-autocomplete`
 
+``` sh
+find . -type f -name '*.tf' -exec dirname {} \; | sort -u |\
+    xargs -I {} terraform validate {}
+```
+
+- プラグインキャッシュを有効にする
+- TFLint で不正なコードを検知する
+    - `brew install tflint`
+    - `tflint`
+    - `tflint --deep --aws-region=ap-northeast-1`
+        - invalid instance type のチェックなど、AWS API を使った詳細なチェック
+        - クレデンシャルの設定が必要
 
 
 
