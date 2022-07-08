@@ -453,6 +453,56 @@ tfstte ファイルのリソースの参照パターン
     - output さえきちんとしていれば良い
 
 
+### リファクタリング
+terraform state。
+リファクタリング後に戻せるように、バージョニング設定を行う（e.g. S3）
+
+terraform state コマンドでは、副作用の有無を意識する。
+コマンドによって tfstate ファイルの書き換えが伴うかが変わるい。
+
+``` sh
+# 定義されているリソース一覧
+$ terraform state list
+null_resource.bar
+null_resource.foo
+
+$ terraform state list -id=6356411977043912714
+$ terraform state show null_resource.foo
+```
+
+`terraform state pull` は、tfstate ファイルを標準出力する。
+
+``` sh
+terraform state pull > terraform.tfstate.overwrite
+sed -i '' 's/foo/overwrite/' terraform.tfstate.overwrite
+# tfstate ファイルを上書きするには「serial」の変更も必要！
+grep serial terraform.tfstate.overwrite
+sed -i '' 's/"serial": 1/"serial": 2/' terraform.tfstate.overwrite
+
+# push コマンドで tfstate を上書きする！
+## めちゃめちゃ危険なコマンドなので基本は使わない！
+terraform state push terraform.tfstate.overwrite
+
+terraform plan
+```
+
+
+### ステートからリソースを削除
+``` sh
+terraform state rm aws_instance.remove
+
+# リソース自体は削除されていない
+aws ec2 describe-instances --instance-ids i-01dafbe5bd72da225 \
+    --output text --query 'Reservations[0].Instances[0].State.Name'
+```
+
+### Rename
+```
+terraform state mv null_resource.before null_resource.after
+terraform state mv null_resource.foo null_resource.foobar
+```
+
+
 
 
 ## Memo
