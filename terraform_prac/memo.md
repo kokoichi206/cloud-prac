@@ -539,6 +539,20 @@ develop ブランチはステージング環境へ、master ブランチは本�
 4. master へマージされたら、CodeBuild が apply を自動実行
 
 
+### そのたトピック
+- デバッグログ
+    - 環境変数「TF_LOG」を使う
+- Terraform のアップグレード
+    - アップグレードを重視している
+    - 公式のアップグレードガイド
+- [awesome-terraform](https://github.com/shuaibiyy/awesome-terraform)
+- 構成ドリフト
+    - リソースの設定が手動で変更されると起こる
+- 未知の未知
+    - なにを Terraform 化してないのか
+    - なぜ Terraform 化してないのか
+    - どうやって管理されているのか
+
 
 
 ## Memo
