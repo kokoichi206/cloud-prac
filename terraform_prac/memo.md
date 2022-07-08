@@ -503,6 +503,42 @@ terraform state mv null_resource.foo null_resource.foobar
 ```
 
 
+### 既存リソースのインポート
+terraform import コマンド。
+
+terraform import に対応していないリソースも存在するので、詳細はドキュメントを確認する。
+
+``` sh
+# AWS CLI での VPC 作成
+aws ec2 create-vpc --cidr-block 192.168.0.0/16
+
+# VPC の id をつかって import
+terraform import aws_vpc.imported vpc-0f5sfafew3441c4
+```
+
+### チーム開発
+tfstate ファイルは決してバージョン管理システムで管理しない！
+
+master ブランチにマージしたら apply する。
+develop ブランチはステージング環境へ、master ブランチは本番環境へそれぞれ apply するなどの戦略もとれる！
+
+- レビュー
+    - アーキテクチャレビュー
+    - コードレビュー
+        - パラメータの設定を省略して良いか、等
+    - ポジティブフィードバックも大事！
+    - 実行計画レビュー
+- Apply
+    - いつ、どうやって apply を行うか！
+
+
+### 継続的 apply
+1. PR
+2. CodeBuild が plan を自動実行
+3. レビューアはコードと plan 結果を確認
+4. master へマージされたら、CodeBuild が apply を自動実行
+
+
 
 
 ## Memo
