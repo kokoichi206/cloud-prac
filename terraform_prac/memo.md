@@ -312,6 +312,146 @@ aws s3api put-public-access-block --bucket tfstate-pragmatic-terraform-kokoichi 
 > 「Terraform で使用されるインフラストラクチャは、Terraform が管理するインフラストラクチャの外部に存在する必要がある」と公式には記述がある。ベストプラクティスは別の AWS アカウントに存在する S3 バケットを使用すること！これは **AWS Organizations を導入すれば実現可能！**
 
 
+### コードの構造化
+- モジュールの分離
+    - IAM ロールやセキュリティグループでやったみたいに！
+- 独立した環境
+    - 複数の環境は、お互いに影響を与えないべき！
+    - 環境ごとに、独立した tfstate ファイルで管理すべきということ
+
+以下のように tfstate ファイルを分離すれば、お互いに影響を与えることはない。
+この方式の欠点は、一部パラメータの値の違うだけのコードが、環境の数だけコピーされること。
+これは「Infrastructure as Code」でアンチパターンとして言及されている。
+
+```
+|-- environments/
+  |--prod/
+  |--stage/
+  |--qa/
+```
+
+### Workspaces
+``` sh
+# ワークスペース追加
+terraform workspace new prod
+terraform workspace show
+terraform workspace list
+terraform workspace select default
+```
+
+``` terraform
+variable "instance_type" {
+    default = "t3.micro"
+}
+
+resource ...
+```
+
+``` sh
+terraform workspace select prod
+```
+
+```
+instance_type = "m5.large"
+```
+
+```
+terraform apply -var-file=prod.tfvars
+```
+
+### コンポーネント分割
+- 安定度を基にコンポーネントを分割
+    - ネットワーク系は安定度高い！
+- ステートフルなリソースを隔離
+    - RDS は価値高い
+    - データを誤って削除しないように
+- 影響範囲
+    - エンドユーザーに直接影響が出るコンポーネントかどうか、など
+- 結局は関心ごとの分離
+- あれ、どうやるんだっけ？
+
+
+### モジュール設計
+- small is beautiful
+- 疎結合
+- 高凝縮
+- 認知的負荷
+
+### Standard Module Structure
+モジュールの実装方式:
+
+```
+|-- LICENSE
+|-- README.md
+|-- main.tf
+|-- variables.tf
+|-- outputs.tf
+|-- modules/
+|  |-- nestedA/
+|    |-- README.md
+|    |-- main.tf
+|    |-- variables.tf
+|    |-- outputs.tf
+|  |-- nestedB/
+|-- examples/
+|  |-- exampleA/
+|    |-- main.tf
+|  |-- exampleB/
+```
+
+ルートモジュール。tf ファイルはモジュールのルートディレクトリに存在しなければならない。
+
+main, variables, outputs の３つは空の場合でも最低限用意すべきファイル！
+全ての「variable」と「output」で description を定義する！
+
+``` terraform
+variable "cidr_block" {
+    description = "Ther CIDR block for the VPC."
+}
+
+output "vpc_id" {
+    value = aws_vpc.example.id
+    description = "The ID of the VPC."
+}
+```
+
+多くの公開モジュールは Apache 2.0 or MIT
+
+``` sh
+git tag 1.0.0
+git push origin 1.0.0
+```
+
+モジュールでは完全にバージョンを固定するのではなく、最小バージョンのみ制限する。
+
+### [Terraform Registory: Modules](https://registry.terraform.io/browse/modules)
+ここに登録するとモジュールとして公開できる！
+
+[terraform-aws-ec2-instance](https://github.com/terraform-aws-modules/terraform-aws-ec2-instance)
+
+
+[Cloud Posse](https://github.com/cloudposse) の内容は参考になる〜！
+
+
+### リソース参照パターン
+tfstte ファイルのリソースの参照パターン
+
+- リテラル
+- リモートステート
+    - tfstate 間の結合度大
+- SSM パラメータストア
+    - tfstate 間の結合度、リモートステートよりは低
+    - SSM パラメータストアの値が間違ってても、plan 時にエラーにならない
+    - 命名規則をきっちり決めとかないと大変になる
+- データソースと依存関係の分離
+    - データソースでは、存在しないリソースを指定すると plan でエラーになる！
+    - 参照対象のリソースへタグを追加
+    - 上手く使うと依存関係を最小化できる！
+    - filter も使う！
+- Data-only Modules
+    - モジュール実装が柔軟になる
+    - output さえきちんとしていれば良い
+
 
 
 
