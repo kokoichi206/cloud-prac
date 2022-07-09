@@ -37,7 +37,7 @@ resource "aws_cloudwatch_event_rule" "example_batch" {
 resource "aws_cloudwatch_event_target" "example_batch" {
   target_id = "example-batch"
   # スケジュール間隔
-  rule     = aws_cloudwatch_event_rule.example_batch.name
+  rule = aws_cloudwatch_event_rule.example_batch.name
   # CloudWatch イベントから ECS を起動するための IAM ロール
   role_arn = module.ecs_events_role.iam_role_arn
   arn      = aws_ecs_cluster.example.arn

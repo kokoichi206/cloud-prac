@@ -2,9 +2,9 @@ resource "aws_lb_target_group" "example" {
   name = "example"
   # Lambda, EC2 instance, IP 等の設定。
   # ECS Fargate では「ip」を指定。
-  target_type          = "ip"
-  vpc_id               = aws_vpc.example.id
-  port                 = 80
+  target_type = "ip"
+  vpc_id      = aws_vpc.example.id
+  port        = 80
   # 多くの場合、HTTPS の終端は ALB で行うため protocol は HTTP となる。
   protocol             = "HTTP"
   deregistration_delay = 300
