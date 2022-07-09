@@ -33,5 +33,3 @@ data "aws_iam_policy_document" "static-www" {
     ]
   }
 }
-
-resource "aws_cloudfront_origin_access_identity" "static-www" {}
