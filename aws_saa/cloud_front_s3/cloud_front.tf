@@ -12,6 +12,7 @@ resource "aws_cloudfront_distribution" "static-www" {
   enabled = true
 
   default_root_object = "index.html"
+  aliases             = [var.domainName]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -35,12 +36,17 @@ resource "aws_cloudfront_distribution" "static-www" {
   # 配信制限
   restrictions {
     geo_restriction {
-      restriction_type = "whitelist"
-      locations        = ["JP"]
+      restriction_type = "none"
+      # none でも locations がないとエラーになる
+      locations = []
     }
   }
+  # 独自証明書を使うよう変更
   viewer_certificate {
     cloudfront_default_certificate = true
+    acm_certificate_arn            = aws_acm_certificate.mysite.arn
+    ssl_support_method             = "sni-only"
+    minimum_protocol_version       = "TLSv1"
   }
 }
 
