@@ -1,4 +1,4 @@
 variable "domainName" {
-  type = string
+  type    = string
   default = "kokoichi.link"
 }
