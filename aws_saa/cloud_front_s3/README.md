@@ -1,10 +1,11 @@
-## Steps
+# CloudFront-S3
+AWS-SAA でよくみる構成を作ってみようシリーズ [#1](https://github.com/kokoichi206/cloud-prac/issues/1)
 
-1. S3 のバケット作成
-1. バケットに SPA をアップロードできる仕組み
-1. CloudFront からアクセス
+## Architecture
 
-### S3 upload
+![](./docs/cf_s3.svg)
+
+## S3 upload
 
 ```sh
 # aws s3 ls --profile=PROFILE_NAME
