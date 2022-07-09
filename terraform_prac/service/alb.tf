@@ -12,7 +12,8 @@ resource "aws_lb" "main" {
   # true for VPC内部向け、false for internet向け
   internal                   = false
   idle_timeout               = 60
-  enable_deletion_protection = true
+  enable_deletion_protection = false
+  # enable_deletion_protection = true
 
   subnets = [
     aws_subnet.public_0.id,

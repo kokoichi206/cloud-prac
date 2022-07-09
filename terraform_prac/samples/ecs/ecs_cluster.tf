@@ -13,7 +13,7 @@ resource "aws_ecs_task_definition" "example" {
   requires_compatibilities = ["FARGATE"]
   container_definitions    = file("./container_definitions.json")
   # ログようにロール追加
-  execution_role_arn       = module.ecs_task_execution_role.iam_role_arn
+  execution_role_arn = module.ecs_task_execution_role.iam_role_arn
 }
 
 # ECSサービス

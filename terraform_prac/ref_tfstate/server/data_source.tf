@@ -10,7 +10,7 @@ data "aws_vpc" "staging" {
 data "aws_subnet" "public_staging" {
   # タグに基づいた参照！
   tags = {
-    "Environment" = "Staging"
+    "Environment"   = "Staging"
     "Accessibility" = "Public"
   }
 
