@@ -40,3 +40,7 @@ resource "aws_api_gateway_deployment" "tr_api" {
 output "tr_api-execution-arn" {
   value = aws_api_gateway_rest_api.tr_api.execution_arn
 }
+
+output "aws_api_gateway_invoke_url" {
+  value = aws_api_gateway_deployment.tr_api.invoke_url
+}

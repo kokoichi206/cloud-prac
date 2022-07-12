@@ -22,3 +22,7 @@ module "api_gateway" {
   prefix               = "sample1"
   tr_lambda-invoke-arn = module.lambda.tr_lambda-invoke-arn
 }
+
+output "api_gateway_domain" {
+  value = module.api_gateway.aws_api_gateway_invoke_url
+}

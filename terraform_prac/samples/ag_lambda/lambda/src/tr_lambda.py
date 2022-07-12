@@ -12,6 +12,7 @@ def handler(event, context):
     employee_lastname = employee_info['LastName']
     employee_office = employee_info['Office']
     return {
+        "isBase64Encoded": False,
         'statusCode': 200,
         'body': json.dumps({
             'Id': employee_id,
