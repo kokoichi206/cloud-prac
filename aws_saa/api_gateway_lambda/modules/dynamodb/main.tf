@@ -31,3 +31,8 @@ resource "aws_dynamodb_table_item" "employee_list_item" {
 
   item = jsonencode(each.value)
 }
+
+# output for module user
+output "employee_list_table" {
+  value = aws_dynamodb_table.employee_list
+}

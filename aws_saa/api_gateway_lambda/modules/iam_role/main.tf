@@ -47,3 +47,7 @@ resource "aws_iam_role_policy" "lambda_role_policy_policy" {
     ]
   })
 }
+
+output "lambda_role-arn" {
+  value = aws_iam_role.lambda_role.arn
+}
