@@ -10,6 +10,10 @@ variable "lambda_role-arn" {
   type = string
 }
 
+variable "api_gw-execution-arn" {
+  type = string
+}
+
 data "archive_file" "lambda" {
   type        = "zip"
   source_dir  = "${path.module}/src"
@@ -32,4 +36,16 @@ resource "aws_lambda_function" "lambda" {
       TABLE_NAME = var.table-name
     }
   }
+}
+
+resource "aws_lambda_permission" "lambda_permit" {
+  statement_id  = "AllowAPIGatewayGetTrApi"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.lambda.arn
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${var.api_gw-execution-arn}/test/GET/"
+}
+
+output "invoke-arn" {
+  value = aws_lambda_function.lambda.invoke_arn
 }
