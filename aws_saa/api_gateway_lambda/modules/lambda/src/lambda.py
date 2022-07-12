@@ -34,5 +34,10 @@ def handler(
     return {
         'isBase64Encoded': False,
         'statusCode': 200,
+        'headers': {
+            "Access-Control-Allow-Headers": "*",
+            "Access-Control-Allow-Origin": "https://my-api-gw-lambda-development-env-bucket.s3.ap-northeast-1.amazonaws.com",
+            "Access-Control-Allow-Methods": "GET"
+        },
         'body': json.dumps(items),
     }
