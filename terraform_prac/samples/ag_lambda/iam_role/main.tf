@@ -37,7 +37,8 @@ resource "aws_iam_role_policy" "tr_lambda_role_policy_policy" {
       {
         Effect = "Allow"
         Action = [
-          "dynamodb:GetItem"
+          "dynamodb:GetItem",
+          "dynamodb:Scan"
         ]
         Resource = [
           var.employee_list_table-arn
