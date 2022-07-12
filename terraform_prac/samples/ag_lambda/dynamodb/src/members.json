@@ -1,0 +1,26 @@
+{
+    "user01": {
+        "EmployeeId": { "S": "a00000110" },
+        "FirstName": { "S": "Taro" },
+        "LastName": { "S": "Momo" },
+        "Office": { "S": "Nagoya" }
+    },
+    "user02": {
+        "EmployeeId": { "S": "a00001110" },
+        "FirstName": { "S": "John" },
+        "LastName": { "S": "Doe" },
+        "Office": { "S": "Hyogo" }
+    },
+    "user03": {
+        "EmployeeId": { "S": "a00100110" },
+        "FirstName": { "S": "Minami" },
+        "LastName": { "S": "Asakura" },
+        "Office": { "S": "Gunma" }
+    },
+    "user04": {
+        "EmployeeId": { "S": "a10000110" },
+        "FirstName": { "S": "Name" },
+        "LastName": { "S": "NotFound" },
+        "Office": { "S": "Virginia" }
+    }
+}
