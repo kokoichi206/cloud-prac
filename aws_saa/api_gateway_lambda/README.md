@@ -11,10 +11,10 @@ $ terraform apply -var="env=production"
 
 #### [variables](./variables.tf)
 
-| variable | description                                         |
-| -------- | --------------------------------------------------- |
-| prefix   | production name                                     |
-| env      | environment<br />(production, staging, development) |
+| variable | description                                         | defalut       |
+| -------- | --------------------------------------------------- | ------------- |
+| prefix   | production name                                     | api_gw_lambda |
+| env      | environment<br />(production, staging, development) | development   |
 
 #### [outputs](./outputs.tf)
 
