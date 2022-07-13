@@ -1,5 +1,9 @@
 ## API Gateway + Lambda
 
+AWS-SAA でよくみる構成を作ってみようシリーズ [#4](https://github.com/kokoichi206/cloud-prac/issues/4)
+
+## Architecture
+
 ![](./docs//architecture.svg)
 
 ### Usage
@@ -11,10 +15,10 @@ $ terraform apply -var="env=production"
 
 #### [variables](./variables.tf)
 
-| variable | description                                         |
-| -------- | --------------------------------------------------- |
-| prefix   | production name                                     |
-| env      | environment<br />(production, staging, development) |
+| variable | description                                         | defalut       |
+| -------- | --------------------------------------------------- | ------------- |
+| prefix   | production name                                     | api_gw_lambda |
+| env      | environment<br />(production, staging, development) | development   |
 
 #### [outputs](./outputs.tf)
 
