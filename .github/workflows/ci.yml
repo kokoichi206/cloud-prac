@@ -1,12 +1,6 @@
 name: terraform lint
-
 on:
   workflow_dispatch:
-    inputs:
-      working_dir:
-        type: string
-        description: "Enter working directory."
-        required: true
   pull_request:
     paths-ignore:
       - "docs/**"
@@ -16,13 +10,9 @@ env:
   TF_VERSIOIN: 1.2.2
 
 jobs:
-  lint:
+  apply:
     name: terraform lint
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     shell: bash
-    #     working-directory: ${{ github.event.inputs.working_dir }}
 
     steps:
       - name: checkout
@@ -40,49 +30,9 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSIOIN }}
 
-      - name: Decide working directory
-        id: working-dir
-        run: |
-          if [ -z "${{ github.event.inputs.working_dir }}" ]; then
-            # set the default dir (when pull request)
-            result="./aws_saa/api_gateway_lambda"
-          else
-            # use workflow_dispatch inputs (when manually executed)
-            result=${{ github.event.inputs.working_dir }}
-          fi
-          # cannot use variable expansion like this? ${${{ github.event.inputs.working_dir }}:-"./aws_saa/api_gateway_lambda"}
-          echo "::set-output name=result::$(echo ${result})"
-      - name: Check working directory step
-        run: echo ${{ steps.working-dir.outputs.result }}
-      - name: Check current directory
-        run: pwd
-        working-directory: ${{ steps.working-dir.outputs.result }}
       - name: format check
         run: terraform fmt -recursive -check
-        working-directory: ${{ steps.working-dir.outputs.result }}
       - id: init
         run: terraform init
-        working-directory: ${{ steps.working-dir.outputs.result }}
       - id: validate
         run: terraform validate
-        working-directory: ${{ steps.working-dir.outputs.result }}
-# name: terraform lint
-
-# on:
-#   pull_request:
-#     paths-ignore:
-#       - "docs/**"
-#       - "**.md"
-
-# jobs:
-#   lint:
-#     name: Lint
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: checkout
-#         uses: actions/checkout@v2
-
-#       - name: lint action
-#         uses: ./.github/actions/lint-check
-#         with:
-#           working_dir: "./aws_saa/api_gateway_lambda"
