@@ -4,6 +4,14 @@
 
 Source code is in [this](./src/) folder.
 
+#### delete s3 contents
+
+make s3 bucket empty (contents only)
+
+```sh
+$ bash scripts/empty_bucket.sh
+```
+
 #### deploy
 
 ```sh
@@ -12,15 +20,15 @@ $ bash scripts/sync.sh
 
 #### before destroy
 
-make s3 bucket empty
+make s3 bucket empty (fully)
 
 ```sh
-$ bash scripts/empty_bucket.sh
+$ python scripts/bucket_full_empty.py
 ```
 
 ### Usage
 
-``` terraform
+```terraform
 module "s3" {
   source = "./modules/s3"
   prefix = var.prefix
