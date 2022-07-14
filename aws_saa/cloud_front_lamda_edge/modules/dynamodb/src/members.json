@@ -1,0 +1,26 @@
+{
+    "user01": {
+        "id": { "S": "a0001" },
+        "first_name": { "S": "Ichi" },
+        "last_name": { "S": "Koko" },
+        "office": { "S": "California" }
+    },
+    "user02": {
+        "id": { "S": "a0002" },
+        "first_name": { "S": "John" },
+        "last_name": { "S": "Doe" },
+        "office": { "S": "Tokyo" }
+    },
+    "user03": {
+        "id": { "S": "a0003" },
+        "first_name": { "S": "Minami" },
+        "last_name": { "S": "Asakura" },
+        "office": { "S": "Gunma" }
+    },
+    "user04": {
+        "id": { "S": "a0004" },
+        "first_name": { "S": "Name" },
+        "last_name": { "S": "NotFound" },
+        "office": { "S": "Virginia" }
+    }
+}
