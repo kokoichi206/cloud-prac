@@ -15,3 +15,9 @@ module "lambda" {
     aws = aws.virginia
   }
 }
+
+module "s3" {
+  source = "./modules/s3"
+  prefix = var.prefix
+  env    = var.env
+}
