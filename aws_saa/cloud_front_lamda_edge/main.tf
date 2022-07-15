@@ -21,3 +21,9 @@ module "s3" {
   prefix = var.prefix
   env    = var.env
 }
+
+module "cloud_front" {
+  source             = "./modules/cloud_front"
+  bucket_id          = module.s3.bucket_id
+  bucket_domain_name = module.s3.aws_s3_bucket_domain_name
+}
