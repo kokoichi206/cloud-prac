@@ -10,6 +10,6 @@
 set -euo pipefail
 
 # Change to your own settinigs
-BACKET_NAME="my-api-gw-lambda-development-env-bucket"
+BACKET_NAME="my-cloud-front-lambda-edge-development-env-bucket"
 
 aws s3 rm "s3://${BACKET_NAME}" --recursive

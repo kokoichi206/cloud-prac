@@ -16,6 +16,8 @@ resource "aws_s3_bucket" "main" {
   bucket = local.bucket_name
   policy = data.aws_iam_policy_document.s3_bucket_policy.json
 
+  force_destroy = true
+
   tags = {
     Name        = "My bucket for ${var.prefix} of ${var.env}"
     Environment = var.env
@@ -34,6 +36,10 @@ resource "aws_s3_bucket_versioning" "versioning_main" {
   }
 }
 
-output "aws_s3_bucket_url" {
-  value = "https://${aws_s3_bucket.main.bucket_domain_name}"
+output "bucket_id" {
+  value = aws_s3_bucket.main.id
+}
+
+output "aws_s3_bucket_domain_name" {
+  value = aws_s3_bucket.main.bucket_domain_name
 }

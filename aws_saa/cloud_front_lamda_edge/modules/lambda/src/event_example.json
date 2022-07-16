@@ -1,0 +1,88 @@
+{
+    "Records": [
+        {
+            "cf": {
+                "config": {
+                    "distributionDomainName": "dpyf93zoqp8wf.cloudfront.net",
+                    "distributionId": "E15J5GRKZ1YFPB",
+                    "eventType": "viewer-request",
+                    "requestId": "PtKsIQehn79VnYHqLdI6LkzgjbAcd6_8vdbzONiLQZ7BlGMxTzqsPQ=="
+                },
+                "request": {
+                    "clientIp": "240f:74:c9f6:1:e49a:9d2b:41c4:697c",
+                    "headers": {
+                        "host": [
+                            {
+                                "key": "Host",
+                                "value": "dpyf93zoqp8wf.cloudfront.net"
+                            }
+                        ],
+                        "user-agent": [
+                            {
+                                "key": "User-Agent",
+                                "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+                            }
+                        ],
+                        "sec-ch-ua": [
+                            {
+                                "key": "sec-ch-ua",
+                                "value": "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\""
+                            }
+                        ],
+                        "sec-ch-ua-mobile": [
+                            { "key": "sec-ch-ua-mobile", "value": "?0" }
+                        ],
+                        "sec-ch-ua-platform": [
+                            {
+                                "key": "sec-ch-ua-platform",
+                                "value": "\"macOS\""
+                            }
+                        ],
+                        "upgrade-insecure-requests": [
+                            { "key": "upgrade-insecure-requests", "value": "1" }
+                        ],
+                        "accept": [
+                            {
+                                "key": "accept",
+                                "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+                            }
+                        ],
+                        "sec-fetch-site": [
+                            { "key": "sec-fetch-site", "value": "cross-site" }
+                        ],
+                        "sec-fetch-mode": [
+                            { "key": "sec-fetch-mode", "value": "navigate" }
+                        ],
+                        "sec-fetch-user": [
+                            { "key": "sec-fetch-user", "value": "?1" }
+                        ],
+                        "sec-fetch-dest": [
+                            { "key": "sec-fetch-dest", "value": "document" }
+                        ],
+                        "referer": [
+                            {
+                                "key": "referer",
+                                "value": "https://github.com/kokoichi206/cloud-prac/issues/5"
+                            }
+                        ],
+                        "accept-encoding": [
+                            {
+                                "key": "accept-encoding",
+                                "value": "gzip, deflate, br"
+                            }
+                        ],
+                        "accept-language": [
+                            {
+                                "key": "accept-language",
+                                "value": "ja,en-US;q=0.9,en;q=0.8"
+                            }
+                        ]
+                    },
+                    "method": "GET",
+                    "querystring": "name=a0001",
+                    "uri": "/"
+                }
+            }
+        }
+    ]
+}

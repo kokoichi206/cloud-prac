@@ -9,23 +9,5 @@
 <body>
   <h1>Top Page</h1>
   <div class="content" id="target"></div>
-
-  <script>
-    // FIXME: hard-cording
-    const BASE_URL = "https://txwpis04ke.execute-api.ap-northeast-1.amazonaws.com/test";
-
-    async function callApi() {
-      const res = await fetch(BASE_URL);
-      const members = await res.json();
-      const parent = document.getElementById("target");
-      for await (let member of members) {
-        const newDiv = document.createElement("div");
-        newDiv.textContent = JSON.stringify(member);
-        parent.appendChild(newDiv);
-      }
-    };
-
-    callApi();
-  </script>
 </body>
 </html>

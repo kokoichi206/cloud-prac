@@ -6,6 +6,14 @@ variable "bucket_domain_name" {
   type = string
 }
 
+variable "qualified_lambda_arn" {
+  type = string
+}
+
+variable "lambda_version" {
+  type = string
+}
+
 resource "aws_cloudfront_origin_access_identity" "static-www" {}
 
 resource "aws_cloudfront_distribution" "static-www" {
@@ -17,9 +25,8 @@ resource "aws_cloudfront_distribution" "static-www" {
     }
   }
 
-  enabled = true
-
-  default_root_object = "index.html"
+  enabled         = true
+  is_ipv6_enabled = true
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
@@ -27,17 +34,28 @@ resource "aws_cloudfront_distribution" "static-www" {
     target_origin_id = var.bucket_id
 
     forwarded_values {
-      query_string = false
+      query_string = true
 
       cookies {
         forward = "none"
       }
+
+      query_string_cache_keys = [
+        "name"
+      ]
     }
 
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+
+    lambda_function_association {
+      event_type = "viewer-request"
+      # lambda_arn = var.qualified_lambda_arn
+      lambda_arn   = "${var.qualified_lambda_arn}:${var.lambda_version}"
+      include_body = false
+    }
   }
 
   restrictions {
@@ -52,6 +70,10 @@ resource "aws_cloudfront_distribution" "static-www" {
   }
 }
 
-output "cloud_ftont_domain" {
+output "cloud_front_arn" {
+  value = aws_cloudfront_distribution.static-www.arn
+}
+
+output "cloud_front_domain" {
   value = aws_cloudfront_distribution.static-www.domain_name
 }

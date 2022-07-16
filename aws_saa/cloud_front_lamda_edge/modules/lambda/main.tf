@@ -2,11 +2,15 @@ variable "prefix" {
   type = string
 }
 
-variable "table-arn" {
-  type = string
+variable "table-arnlist" {
+  type = list(string)
 }
 
 variable "table-name" {
+  type = string
+}
+
+variable "cloud_front_arn" {
   type = string
 }
 
@@ -50,8 +54,17 @@ resource "aws_iam_role_policy" "lambda_role_policy_policy" {
           "dynamodb:GetItem",
           "dynamodb:Scan"
         ]
+        Resource = var.table-arnlist
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
         Resource = [
-          var.table-arn
+          "arn:aws:logs:*:*:*"
         ]
       }
     ]
@@ -74,10 +87,32 @@ resource "aws_lambda_function" "lambda" {
   handler          = "lambda.handler"
   source_code_hash = data.archive_file.lambda.output_base64sha256
   runtime          = "python3.8"
-  timeout          = 30
-  environment {
-    variables = {
-      TABLE_NAME = var.table-name
-    }
-  }
+  timeout          = 5
+
+  publish = true
+  # environment {
+  #   variables = {
+  #     TABLE_NAME = var.table-name
+  #   }
+  # }
+}
+
+resource "aws_lambda_permission" "lambda_permit" {
+  statement_id = "AllowExecutionFromCloudFront"
+  # action        = "lambda:InvokeFunction"
+  action        = "lambda:GetFunction"
+  function_name = aws_lambda_function.lambda.function_name
+  principal     = "edgelambda.amazonaws.com"
+}
+
+output "qualified_arn" {
+  value = aws_lambda_function.lambda.arn
+  # qualified_arn = arn + version
+  # value       = aws_lambda_function.lambda.qualified_arn
+  description = "The lambda arn"
+}
+
+output "qualified_version" {
+  value       = aws_lambda_function.lambda.version
+  description = "The lambda version"
 }
