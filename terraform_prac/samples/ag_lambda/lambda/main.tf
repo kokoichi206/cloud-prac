@@ -22,9 +22,9 @@ data "archive_file" "tr_lambda" {
 }
 
 resource "aws_lambda_function" "tr_lambda" {
-  filename         = data.archive_file.tr_lambda.output_path
-  function_name    = "${var.prefix}_tr_lambda"
-  role             = var.tr_lambda_role-arn
+  filename      = data.archive_file.tr_lambda.output_path
+  function_name = "${var.prefix}_tr_lambda"
+  role          = var.tr_lambda_role-arn
   # ここが定数で入ってるの嫌やな？
   handler          = "tr_lambda.handler"
   source_code_hash = data.archive_file.tr_lambda.output_base64sha256
