@@ -9,3 +9,7 @@ AWS SAA の資格を勉強していた時によくみたアーキテクチャを
 ### [api_gateway_lambda](./api_gateway_lambda/)
 
 ![](./api_gateway_lambda/docs/architecture.svg)
+
+### [cloud_front_lamda_edge](./cloud_front_lamda_edge/)
+
+![](./cloud_front_lamda_edge/docs/architecture.svg)
