@@ -45,6 +45,7 @@ module "s3" {
 
 #### outputs
 
-| variable          | description          |
-| ----------------- | -------------------- |
-| aws_s3_bucket_url | The url of s3 bucket |
+| output                    | description                  |
+| ------------------------- | ---------------------------- |
+| bucket_id                 | bucket id                    |
+| aws_s3_bucket_domain_name | the domain name of s3 bucket |

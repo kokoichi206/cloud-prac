@@ -1,19 +1,3 @@
-variable "bucket_id" {
-  type = string
-}
-
-variable "bucket_domain_name" {
-  type = string
-}
-
-variable "qualified_lambda_arn" {
-  type = string
-}
-
-variable "lambda_version" {
-  type = string
-}
-
 resource "aws_cloudfront_origin_access_identity" "static-www" {}
 
 resource "aws_cloudfront_distribution" "static-www" {
@@ -68,12 +52,4 @@ resource "aws_cloudfront_distribution" "static-www" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
-}
-
-output "cloud_front_arn" {
-  value = aws_cloudfront_distribution.static-www.arn
-}
-
-output "cloud_front_domain" {
-  value = aws_cloudfront_distribution.static-www.domain_name
 }

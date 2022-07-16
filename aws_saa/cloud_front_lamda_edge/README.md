@@ -22,7 +22,7 @@ $ terraform apply -var="env=production"
 
 #### [outputs](./outputs.tf)
 
-| variable            | description                                           |
+| output              | description                                           |
 | ------------------- | ----------------------------------------------------- |
 | s3_domain           | The url of s3 bucket                                  |
 | cloud_front_domain  | The url of cloud-front and you should access this URL |

@@ -1,19 +1,3 @@
-variable "prefix" {
-  type = string
-}
-
-variable "table-arnlist" {
-  type = list(string)
-}
-
-variable "table-name" {
-  type = string
-}
-
-variable "cloud_front_arn" {
-  type = string
-}
-
 data "aws_iam_policy_document" "assume_role_policy_doc" {
   statement {
     sid    = "AllowAwsToAssumeRole"
@@ -103,16 +87,4 @@ resource "aws_lambda_permission" "lambda_permit" {
   action        = "lambda:GetFunction"
   function_name = aws_lambda_function.lambda.function_name
   principal     = "edgelambda.amazonaws.com"
-}
-
-output "qualified_arn" {
-  value = aws_lambda_function.lambda.arn
-  # qualified_arn = arn + version
-  # value       = aws_lambda_function.lambda.qualified_arn
-  description = "The lambda arn"
-}
-
-output "qualified_version" {
-  value       = aws_lambda_function.lambda.version
-  description = "The lambda version"
 }

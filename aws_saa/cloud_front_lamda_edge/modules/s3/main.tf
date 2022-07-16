@@ -1,11 +1,3 @@
-variable "prefix" {
-  type = string
-}
-
-variable "env" {
-  type = string
-}
-
 locals {
   # cannot use underscore(_) as a s3 bucket name
   formatted_prefix = replace(var.prefix, "_", "-")
@@ -34,12 +26,4 @@ resource "aws_s3_bucket_versioning" "versioning_main" {
   versioning_configuration {
     status = "Enabled"
   }
-}
-
-output "bucket_id" {
-  value = aws_s3_bucket.main.id
-}
-
-output "aws_s3_bucket_domain_name" {
-  value = aws_s3_bucket.main.bucket_domain_name
 }

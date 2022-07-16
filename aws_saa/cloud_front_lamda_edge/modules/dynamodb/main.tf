@@ -1,11 +1,3 @@
-variable "prefix" {
-  type = string
-}
-
-variable "env" {
-  type = string
-}
-
 resource "aws_dynamodb_table" "employee_list" {
   name         = "${var.prefix}_${var.env}_employee_list"
   billing_mode = "PAY_PER_REQUEST"
@@ -30,9 +22,4 @@ resource "aws_dynamodb_table_item" "employee_list_item" {
   hash_key   = aws_dynamodb_table.employee_list.hash_key
 
   item = jsonencode(each.value)
-}
-
-# output for module user
-output "employee_list_table" {
-  value = aws_dynamodb_table.employee_list
 }

@@ -32,6 +32,6 @@ module "lambda" {
 
 #### outputs
 
-| variable            | description        |
+| output              | description        |
 | ------------------- | ------------------ |
 | employee_list_table | The DynamoDB Table |
