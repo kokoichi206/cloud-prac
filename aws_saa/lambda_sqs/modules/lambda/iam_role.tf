@@ -34,6 +34,13 @@ resource "aws_iam_role_policy" "lambda_policy" {
         Resource = var.sqs_arn
       },
       {
+        Action = [
+          "s3:PutObject",
+        ],
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
         Effect = "Allow"
         Action = [
           "logs:CreateLogGroup",

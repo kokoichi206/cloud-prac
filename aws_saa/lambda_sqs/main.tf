@@ -10,3 +10,9 @@ module "lambda" {
   prefix  = var.prefix
   sqs_arn = module.sqs.arn
 }
+
+module "s3" {
+  source = "./modules/s3"
+  prefix = var.prefix
+  env    = var.env
+}
