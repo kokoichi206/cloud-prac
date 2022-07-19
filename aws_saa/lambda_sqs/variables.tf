@@ -1,6 +1,6 @@
 variable "prefix" {
   type        = string
-  default     = "api_gw_lambda"
+  default     = "lambda_sqs"
   description = "The prifix of the service"
 }
 

@@ -6,6 +6,11 @@ resource "aws_sqs_queue" "terraform_queue" {
   receive_wait_time_seconds = 10
 
   tags = {
-    Environment = "production"
+    Environment = var.env
   }
+}
+
+resource "aws_lambda_event_source_mapping" "default" {
+  event_source_arn = aws_sqs_queue.terraform_queue.arn
+  function_name    = var.lambda_function_name
 }
