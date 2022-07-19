@@ -4,8 +4,10 @@
 
 ### [variables](./variables.tf)
 
-| variable | description |
-| -------- | ----------- |
+| variable | description                              |
+| -------- | ---------------------------------------- |
+| prefix   | The prifix of the service (service name) |
+| env      | The environment                          |
 
 ### [outputs](./outputs.tf)
 
