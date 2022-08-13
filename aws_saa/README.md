@@ -13,3 +13,7 @@ AWS SAA の資格を勉強していた時によくみたアーキテクチャを
 ### [cloud_front_lamda_edge](./cloud_front_lamda_edge/)
 
 ![](./cloud_front_lamda_edge/docs/architecture.svg)
+
+### [lambda_sqs](./lambda_sqs/)
+
+![](./lambda_sqs/docs/architecture.svg)
