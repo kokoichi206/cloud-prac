@@ -17,3 +17,6 @@ AWS SAA の資格を勉強していた時によくみたアーキテクチャを
 ### [lambda_sqs](./lambda_sqs/)
 
 ![](./lambda_sqs/docs/architecture.svg)
+### [multi_az](./multi_az/)
+
+![](./multi_az/docs/architecture.svg)
