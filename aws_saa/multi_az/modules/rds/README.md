@@ -11,5 +11,7 @@
 
 ### [outputs](./outputs.tf)
 
-| output | description |
-| ------ | ----------- |
+| output   | description                           |
+| -------- | ------------------------------------- |
+| address  | The address of RDS for EC2 to access  |
+| endpoint | The endpoint of RDS for EC2 to access |

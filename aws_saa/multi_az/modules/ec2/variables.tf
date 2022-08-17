@@ -40,3 +40,8 @@ variable "ingress_config" {
   ]
   description = "list of ingress config"
 }
+
+variable "key_name" {
+  type        = string
+  description = "key name of SSH Key"
+}

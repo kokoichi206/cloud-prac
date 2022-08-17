@@ -1,7 +1,7 @@
 resource "aws_security_group" "ec2-sg" {
   name = "${var.prefix}-ec2-sg"
 
-  vpc_id      = var.vpc_id
+  vpc_id = var.vpc_id
 
   dynamic "ingress" {
     for_each = { for i in var.ingress_config : i.port => i }
@@ -24,13 +24,8 @@ resource "aws_security_group" "ec2-sg" {
 
 # EC2 Key Pairs
 resource "aws_key_pair" "ec2-key" {
-  key_name   = "common-ssh"
-  public_key = tls_private_key._.public_key_openssh
-}
-
-resource "tls_private_key" "_" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
+  key_name   = var.key_name
+  public_key = file("${var.key_name}.pub")
 }
 
 # EC2

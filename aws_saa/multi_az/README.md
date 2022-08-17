@@ -22,7 +22,9 @@ $ terraform apply -var="env=production"
 
 ### [outputs](./outputs.tf)
 
-| output | description |
-| ------ | ----------- |
+| output              | description               |
+| ------------------- | ------------------------- |
+| ssh_command         | SSH command to access EC2 |
+| sql_connect_command | Command to connect RDS    |
 
 ## Modules

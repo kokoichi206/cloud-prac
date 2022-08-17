@@ -9,3 +9,8 @@ variable "env" {
   default     = "development"
   description = "The environment where the service works (production, staging, development)"
 }
+
+variable "key_name" {
+  type    = string
+  default = "ec2_key"
+}
