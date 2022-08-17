@@ -26,5 +26,6 @@ $ terraform apply -var="env=production"
 | ------------------- | ------------------------- |
 | ssh_command         | SSH command to access EC2 |
 | sql_connect_command | Command to connect RDS    |
+| address_replica     | Address of RDS-Replica    |
 
 ## Modules

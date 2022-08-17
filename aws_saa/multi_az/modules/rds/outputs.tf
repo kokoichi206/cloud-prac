@@ -8,6 +8,11 @@ output "address" {
   description = "The address of RDS for EC2 to access"
 }
 
+output "address_replica" {
+  value       = aws_db_instance.rds-read.address
+  description = "The address of RDS-Replica"
+}
+
 # endpoint = address:port
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_instance
 output "endpoint" {

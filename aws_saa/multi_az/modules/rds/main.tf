@@ -10,6 +10,25 @@ resource "aws_db_instance" "rds" {
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.rds-sg.id]
   db_subnet_group_name   = aws_db_subnet_group.rds-subnet-group.name
+
+  multi_az = true
+  # Backups are required in order to create a replica
+  maintenance_window      = "Mon:00:00-Mon:03:00"
+  backup_window           = "03:00-06:00"
+  backup_retention_period = 1
+}
+
+resource "aws_db_instance" "rds-read" {
+  allocated_storage   = 10
+  storage_type        = "gp2"
+  instance_class      = "db.t2.micro"
+  identifier          = "${var.db_name}-read"
+  replicate_source_db = aws_db_instance.rds.identifier
+
+  # Username and password must not be set for replicas
+  password = ""
+
+  backup_retention_period = 0
 }
 
 resource "aws_db_subnet_group" "rds-subnet-group" {
