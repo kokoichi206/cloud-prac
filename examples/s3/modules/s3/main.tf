@@ -30,10 +30,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "main" {
 
     status = "Enabled"
 
-    transition {
-      days          = 1
-      storage_class = "STANDARD_IA"
-    }
+    # Days' in Transition action must be greater than or equal to 30 for storageClass 'STANDARD_IA'
+    # transition {
+    #   days          = 1
+    #   storage_class = "STANDARD_IA"
+    # }
 
     transition {
       days          = 2
