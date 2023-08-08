@@ -39,5 +39,8 @@ terraform apply
 
 ## Links
 
-- [s3 bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket.html)
-- [s3_bucket_lifecycle_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration)
+- [terraform: s3 bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket.html)
+- [terraform: s3_bucket_lifecycle_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration)
+- [ライフサイクルルールの適応](https://repost.aws/ja/knowledge-center/s3-lifecycle-rule-delay)
+  - 1日1回, UTC 00:00 に実行されるらしい
+- [Setting lifecycle configuration on a bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/how-to-set-lifecycle-configuration-intro.html)
