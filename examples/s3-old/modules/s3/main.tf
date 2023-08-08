@@ -15,6 +15,18 @@ locals {
 resource "aws_s3_bucket" "main" {
   bucket = local.bucket_name
   acl = "private"
+
+  lifecycle_rule {
+    id      = "gracier_3d"
+    enabled = true
+
+    transition {
+      days          = 2
+      # storage class
+      # see: https://docs.aws.amazon.com/AmazonS3/latest/API/API_Transition.html#AmazonS3-Type-Transition-StorageClass
+      storage_class = "GLACIER"
+    }
+  }
 }
 
 output "aws_s3_bucket_url" {
