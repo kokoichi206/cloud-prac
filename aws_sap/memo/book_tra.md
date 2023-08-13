@@ -226,6 +226,112 @@
       - CloudFront から配信
     - Medialive, MediaStore, CloudFront のコンボもある
 
+## 移行
+
+- 7 つの R
+  - Refactor
+  - Replatform
+  - Repurchase
+  - Rehost
+    - シンプルなのせかえ
+    - まずは Replatform を検討
+  - Relocate
+    - VMWare Cloud on AWS → AWS
+  - Retain
+  - Retire
+- AWS Migration Hub
+  - AWS Application Discovery Service
+- DataSync
+  - オンプレのデータを S3, EFS, FSx へ安全かつ高速に転送
+- Application Migration Service: MGN
+  - オンプレの**サーバー**を AWS へ移行
+  - 物理サーバー、仮想サーバーともに対象のソースサーバーに設定可
+- Database Migration Service: DMS
+  - データベースの移行サービス
+  - 1回だけの実行や継続的な差分移行
+    - 変更データキャプチャ
+  - AWS ↔︎ オンプレのどちらも対応
+
+### モダナイゼーション
+
+- クラウドジャーニー
+  - 継続的な改善ができるようにすること
+- ECS
+  - イメージの保存先として ECR 指定可
+  - 起動タイプ
+    - Fargate, EC2
+  - キャパシティプロバイダー
+    - 詳細な設定
+  - ECS イベントストリーム
+    - EventBridge のルール
+- AWS Proton
+  - コンテナの実行環境を、環境テンプレートとサービステンプレートに分ける
+    - 自動構築、管理
+  - 環境テンプレート
+    - VPC, IAM, ECS クラスタ
+  - サービステンプレート
+    - ALB, ECS タスク、ECS サービス、ECR
+- App Runner
+  - GitHub のリポジトリ or ECR イメージから、アプリケーションを継続的にデプロイ・運用する
+  - インフラの管理は不要
+  - Github を選んだ場合には、そのソースをデプロイするコンテナイメージが内部的に自動で作成される
+  - サービスという単位で実行される
+- Amazon Kinesis
+  - ストリーミングデータを扱うサービス
+  - Data Streams
+    - ストリームデータを収集して順番通りにリアルタイム処理
+    - 送信データにはパーティションキーを指定
+    - オンデマンドモード
+      - シャードを設定しなくても自動でスケール！
+    - データ保持はデフォルトで 24h
+  - Data Firehose
+    - 大量のデータを、指定した送信先へ送る
+    - 送信先候補
+      - S3
+      - Redshift
+      - OpenSearch
+      - HTTP エンドポイント
+      - SaaS
+    - 送信前オプション
+      - Glue でのデータ変換
+      - AWS Lambda でのデータ加工
+    - 送信タイミング
+      - バッファ設定
+    - バッファ指定が待てない場合・送信だきが DynamoDB など Firehose に対応してない場合
+      - Data Streams を選択する
+  - Data Analytics
+    - ストリーミングデータを、主に SQL クエリを使用して分析できる
+    - 分析結果は指定の送信先へ送信できる
+    - 使用例
+      - Data Streams → Data Analytics → Data Firehose → S3 → Athena
+  - Video Streams
+    - 使用例
+      - Video Streams → Recognition Video → Data Streams → Lambda → OpenSearch Service
+- S3 を中心としたデータレイク
+- Glue
+  - ETL: Extract, Transform, Load サービス
+  - S3 のデータを、Glue データカタログでカタログ化
+- Athena
+  - S3 のデータを SQL を使用して簡単に分析できるサービス
+  - CSV, JSON, Parquet などのデータの分析に使用
+- AI サービス
+  - Kendra
+    - S3, FSx RDS などのサービスや SaaS のストレージサービスの情報をインデくすして、自然言語検索サービスを構築できる
+  - Polly
+    - テキストを音声に
+  - Transcribe
+    - 音声をテキストに
+  - Textract
+    - 手書きのドキュメントから、テキストデータに！
+  - Lex
+    - Alexa と同じ、対話型 AI チャットボットを作成できる
+    - Amazon Connect や Kendra と連携が便利
+- SES: Simple Email Service
+- Amazon Pinpoint
+  - マーケティングのためのサービス
+  - 顧客にメール、SMS, などが送れる
+    - 届いた、みられた、リンクがクリックされた、などのアクティビティを分析
+
 ## links
 
 - https://aws.amazon.com/jp/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc
