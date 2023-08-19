@@ -1,0 +1,78 @@
+## [AWS Network Firewall](https://www.youtube.com/watch?v=bO8O1P7pm34&list=PLzWGOASvSx6FIwIC2X1nObr1KcMCBBlqY&index=152&ab_channel=AmazonWebServicesJapan%E5%85%AC%E5%BC%8F)
+
+### 概要
+
+- VPC のサブネットに配置するマネージドファイアウォールサービス
+  - public subnet の前段に Firewall Subnet がある
+  - FireWall endpoint が存在し、一旦 Network Firewall をくぐる形
+- 特徴
+  - スケーラブル
+    - 45 Gpbs 超
+  - マネージド
+- 設定
+  - ファイヤーウォールポリシーとルール作成
+  - 構築後、トラフィックをファイヤウォールエンドポイントへ切り替え
+  - AWS Firewall Manager にて一元管理
+- step
+  - VPC にファイアウォール用のサブネットを作成
+  - ファイアウォールの作成
+  - ルーティング設定
+- 機能一覧
+  - ファイアウォール
+    - ステートレスパケットフィルタ（5-tuple）
+    - ステートフルパケットフィルタ（5-tuple）
+    - ステートフルパケットフィルタ（ドメインリスト）
+    - Suricata 互換 IPS
+  - 管理
+    - CloudWatch ルールメトリック
+    - flow log, イベント
+    - Firewall Manager による一元管理
+- VPC のセキュリティコンポーネント
+  - Network ACL
+    - アクセス制御
+    - ステートレス
+    - L3-L4
+    - 無料
+  - Security Group
+    - アクセス制御
+    - ステートフル
+    - L3-L4
+    - 無料
+  - Gateway Load Balancer + appliance
+    - セキュリティパウライアンスを冗長化
+    - アプライアンスに準ずる
+    - L3-L7
+    - 有料
+  - Network Firewall
+    - トラフィックけんさ, フィルタリング
+    - ステートフルとステートレス
+    - L3-L7
+    - 有料
+  - WAF
+    - トラフィックけんさ, フィルタリング
+    - ステートレス
+    - L7
+    - 有料
+- 設定時注意
+  - in out の対称性に注意
+    - Firewall Subnet, NAT Gateway, EC2 で、それぞれ正しくデフォルトゲートウェイの設定を行う
+    - Ingress Routing を利用し、Internet Gateway から VPC 方向の通信が Firewall endpoint に戻るように設定
+      - これがない場合、NAT Gateway に直接戻ってしまう
+  - 各 AZ にそれぞれ Firewall subnet とエンドポイントを配置する
+
+### ルール設定のポイント
+
+- ステートレス 5-tuple フィルタ
+  - ACL のように優先度つけて絵rっ虚していく
+  - ルールにマッチしなかったアクションは pass 固定になる
+  - ステートレスであるため、Ingress/Egress 両方を設定
+- ステートフル 5-tuple フィルタ
+  - ルールにマッチしなかったアクションは pass 固定になる
+  - ステートフルなので、**パスした通信に対する応答トラフィック**は、自動的にパスされる
+- ステートフルドメインリストフィルタ
+  - マッチしなかった時のアクションを指定可能（Drop/Pass）
+  - ワイルドカード指定可能
+  - **SSL/TLS の場合 SNI を見て検査するので、ESNI が使われている場合には適応不可**
+- Suricata 互換 IPS
+  - スリカタ
+  - 柔軟な制御が可能、機能も豊富
