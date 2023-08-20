@@ -4,6 +4,10 @@
 - DAX
   - DynamoDB Accelerator
     - インメモリキャッシュ
+  - 最大10倍のパフォーマンス
+  - DynamoDB API と互換性あり
+  - ないもの
+    - Savings Plan とかはない。。。
 - DynamoDB
   - Auto Scaling のサポート
   - 書き込みリクエストをキューイングに貯めて非同期にすることも！
@@ -11,14 +15,24 @@
   - 複合キー
     - パーティションキー
     - ソートキー
+  - スロットリング
+    - [API 呼び出しが各種サービスコンポーネントによって処理される速度を制限すること](https://docs.aws.amazon.com/ja_jp/amazondynamodb/latest/developerguide/TroubleshootingThrottling.html)
+  - オンデマンド
+    - プロビジョンドと違い、キャパシティユニットの設定はない
+  - グローバルテーブル
+    - ローカルの読み取りと書き込みで、グローバルなデータアクセスを実現
 - IPv6
   - VPC のサブネットに IPv6 の CIDR
     - デュアルスタックモード
   - デフォルトゲートウェイ `::/0`
+  - すべてのIPアドレスがパブリックIPアドレスの役割を持っている
+    - **Egress-Only インターネットゲートウェイ**
+      - プライベートサブネットから、アウトバウンドのみの許可が可能となる
 - SCP
   - 許可することのできる範囲
   - 実際の権限を与えることはできない
     - 必要な権限は IAM ポリシーで設定する
+  - アカウント全体に影響する
 - Amazon API Gateway
   - エッジ最適化 API エンドポイント
 - リザーブドタイプのインスタンス
@@ -33,9 +47,12 @@
 - AWS Shield
   - Standard
     - CloudFront, Route53
+    - L3,4 での攻撃が対象
     - 無料、設定不要
   - Advanced
     - EC2, ALB
+    - L7 での攻撃も対象
+    - 3000 USD がデフォで入る、+ 転送料
 - AMI 作成時
   - Authorized キー（公開鍵）は内包される
   - PEM キー（秘密鍵）はリージョンごとの管理
@@ -61,7 +78,10 @@
 - パイロットライト方式
   - DR 実現方式の1つ
   - 復旧のための、必要最小限のリソースを DR 用の別サイトで起動しえとく
-- SQS を活用した Auto Scaling！
+- Auto Scaling
+  - SQS を活用した Auto Scaling！
+  - ライフサイクルフックの待機時間の最大数は 7200 秒
+  -
 - Macie
   - 機密データを、機械学習によって自動的に検出・分類・保護
   - S3 のみが対象
@@ -77,3 +97,116 @@
     - Transform
     - Load
   - データ分析基盤
+  - データ変換
+    - CSV の区切り文字のカスタマイズ
+- EFS
+  - 複数の EC2 から参照するのに使う
+- DLQ: Dead Letter Queue
+  - SQS, Lambda で設定
+- S3
+  - RTC: Replication Time Control
+    - 閾値を越したときのイベント通知
+    - 送信先に SNS トピック
+      - サブスクリプションに管理チームの E メールアドレス、など
+  - リクエスタ支払い
+    - 以下が必須に
+      - AWS 認証
+      - x-amz-request-payer:requester
+    - バケットポリシーの変更は不要
+  - Transfer Acceleration
+    - **遠隔地からの**アップロードが高速に！
+    - バクボーンネットワーク？
+  - マルチパートアップロード
+    - ライフサイクルポリシーで不完全な部分を削除したり
+- RDS
+  - スナップショットは KMS の CMK で暗号化されている
+    - Aurora も！
+    - 復元するには CMK を使用する権限が必要
+      - CMK のエクスポートはできない
+- EC2
+  - 脆弱性検査は Inspector
+- Elastic IP
+  - サポートしている
+    - NLB
+    - EC2
+  - サポートしていない
+    - API Gateway
+    - ALB
+- SCT
+  - Schema Conversion Tool
+  - リレーショナル OLTP スキーマや DWH を変換できる！
+  - 各種 RDB, Redshift などに変換
+- CloudFormation
+  - 事前に AMI ID がいるよね。。。
+- Application Migration Service
+  - テストインスタンスの機能がある
+  - 起動設定
+  - AWS Replication Agent をオンプレのサーバーにインストールする
+- Kinesis family
+  - Kinesis Data Analytics
+    - ストリーミングデータの加工を１秒未満のレイテンシーで実現
+    - S3 への直接送信はできない
+  - Kinesis Data Firehose
+    - バッファインターバルが、最低60秒必要
+- Route53
+  - インバウンド エンドポイント
+    - オンプレから AWS リソースのプライベート名前解決
+  - アウトバウンド エンドポイント
+    - オンプレの既存 DNS サーバーを使用した名前解決
+  - 複数値回答ルーティング
+- CART
+  - AWS Cloud Adoption Readiness Tool
+  - 質問に答えることで、クラウド移行の準備状況と、それに対する大まかな推奨事項のレポートが作成される
+- VPN
+  - Transit Gateway
+    - Enable Acceleration を有効にする
+      - Global Accelerator を使用した VPN ネットワークの高速化
+    - 同じリージョンの VPC のみ接続可能
+    - Transit Gateway どうしはピア接続できる
+- OU
+  - Organization Unit
+  - 継承 + 直接アタッチが必要
+    - 継承のみでは何もできない
+  - Firewall Manager
+    - AWS Organizations 内にあるアカウントとアプリケーション全体で一元的にファイアウォールルールを設定および管理できるようにするセキュリティ管理サービス
+    - 必要なこと
+      - Organizations で全ての機能を有効にする
+      - Manager の管理アカウントを設定
+      - AWS Config を有効化する
+- Lambda
+  - 送信元 Elastic IP を設定
+    - VPC プアリベートサブネットで起動
+      - lambda 専用の VPC を作成したり
+    - パブリックサブネットの NAT ゲートウェイに関連づいた Elastic IP を登録
+- AD Connector
+  - 既存の Active Directory のゲートウェイのように、AWS サービスから連携できる
+- Direct Connect Gateway
+  - 複数リージョンの VPC にアタッチできる
+- AWS Systems Manager Session Manager
+- IAM ユーザー
+  - 上限
+    - ユーザー数: 5000
+    - グループ数: 100
+- AWS Outposts
+  - 自社のデータセンターや自社拠点にAWSのラック、またはサーバーを設置
+  - AWSを自社のオンプレミスサーバーのように拡張して使える
+  - ハイブリッドクラウドの進化系
+- CloudFront
+  - フィールドレベルの暗号化
+- service catalog
+  - リソースの作成権限がなくても登録された製品を起動できる
+- Step Functions
+  - Parallel 固定化された異なった並列処理
+  - Map 同一のステートで、変化する値
+- ACM
+  - AWS Certificate Manager
+  - サーバー証明書のインポートが可能なあsービス
+    - ELB, CloudFront, API Gateway
+    - **not** EC2
+
+## 用語
+
+- VIF
+  - Virtual InterFace
+- IMDSv1
+  - インスタンスメタデータサービス
