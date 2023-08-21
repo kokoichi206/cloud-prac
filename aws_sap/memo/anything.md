@@ -1,0 +1,118 @@
+- EFS
+  - クラス
+    - 標準ストレージクラス
+    - 低頻度アクセスストレージクラス
+      - ストレージ容量とデータ転送量の両方が課金の対象
+  - AWS のマネージド NFS サービス
+- SSM
+  - EC2 に ssh 許可してない状態で、任意のシェルコマンドを実行する、など
+- DynamoDB
+  - リソースベースのポリシーを適用**できない**
+- Aurora
+  - グローバルデータベース
+    - クロスリージョン対応
+- Cost Explorer
+  - デフォルトで無効化されている
+- ALB ↔︎ EC2 を暗号化
+  - サードパーティの SSL 証明書を EC2 にインストール
+- OU
+  - FullAWSAccess がデフォルトでアタッチ
+- AutoScaling
+  - ライフサイクルフック
+    - インスタンスを終了させる前に EventBridge ルールを用いて他のサービスをトリガーすることが可能に
+    - ABANDON を投げると強制で終了させられる
+- SAM: AWS Serverless Application Model
+- オンプレの AD を使いたい
+  - AD Connector
+- Fargate, lambda でのコスト削減
+  - Compute Saving Plans
+    - リザーブドインスタンとかない
+  - サーバーレスだから？
+- WebSocket
+  - REST API: API Gateway
+  - GraphQL: AppSync
+- [DLM: Data Lifecycle Manager](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/snapshot-lifecycle.html)
+  - BSのスナップショットのスケジューリングや世代管理
+- インタフェース型 VPC エンドポイント
+  - 通信元の IAM 設定は不要
+  - VPC エンドポイント自体にはポリシーをアタッチすることが可能
+- RTC (S3)
+  - Replication Time Controlの略
+  - オブジェクトの99.99%を15分以内にレプリケートすることを保証
+- SNS
+  - クロスリージョン配信可能！
+- EMR
+  - 典型設定
+    - マスターノードとコアノードはオンデマンド
+    - タスクノードはスポット
+- App Runner
+  - ECRリポジトリに保存されているイメージを利用して，コンテナ化されたアプリケーションを迅速にデプロイする
+- ALB
+  - アクセスログではペイロードは記録されない
+    - 必要なら VPC フローログを利用する
+- DynamoDB
+  - グローバルテーブル
+    - マルチリージョンレプリケーション
+    - 条件
+      - DynamoDB Streams を有効化していること
+- VPC
+  - PrivateLink
+    - VPC エンドポイント同士で通信する方式
+- AWS Config
+  - リソ酢構成が企業のポリシに準拠しているかの監査・評価
+  - 設定の変更をアカウントの特定のイベントに関連づける
+- AWS Control Tower
+  - AWS Organizations をベースとした環境をのベストプラクティスに則った形で自動で！
+  - 概念
+    - ガード絵ともにーる
+    - ランディングゾーン
+    - ダッシュボード
+  - ユースケース
+    - セキュリティ統制の徹底
+    - ログの一元管理
+      - 誰がいつログインしたか
+- CART
+  - AWS Cloud Adoption Readiness Tool
+  - クラウド導入支援ツール
+    - 質問に答える形式
+    - AWS アカウントは不要
+- [AWS Application Discovery Service](https://aws.amazon.com/jp/application-discovery/)
+  - オンプレの情報を収集
+    - Migration Hub で確認
+  - 移行計画をサポート
+- Lambda オーソライザー
+  - Lambda 関数を使用して API へのアクセスを制御する API Gateway の機能
+- Athena
+  - [2023/6 から、Glacier に保存されているデータもクエリ可能に！！****](https://aws.amazon.com/jp/about-aws/whats-new/2023/06/amazon-athena-querying-restored-data-s3-glacier/)
+    - あっつ
+- [Outposts](https://aws.amazon.com/jp/outposts/)
+  - Outposts ラック
+    - AWS ラックを自社データセンターなどのオンプレミス環境に設置して利用
+    - 42 U ラックとは、42段の高さがある楽
+  - Outposts サーバー
+    - 1台の AWS サーバーをオンプレミス環境に設置して利用
+    - 1 U サーバーか 2 U サーバーか、など
+- [Amazon MQ](https://aws.amazon.com/jp/amazon-mq/?amazon-mq.sort-by=item.additionalFields.postDateTime&amazon-mq.sort-order=desc)
+  - メッセージブローカー
+  - MQTT: Message Queuing Telemetry Transport
+    - リソース制限がある元でのメッセージングプロトコル
+    - pub sub をいい感じに実現するものかなー？
+
+## Links
+
+- [マンガ: AWS 開発日記](https://aws.amazon.com/jp/campaigns/manga/series/)
+- aws document
+  - [IAM の一時的な認証情報](https://cdocs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/id_credentials_temp.html)
+  - [VPC のモニタリング](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/monitoring.html)
+  - [Config](https://aws.amazon.com/jp/config/)
+  - [AWS Control Tower](https://aws.amazon.com/jp/controltower/)
+  - [Egress-Only インターネットゲートウェイ](https://docs.aws.amazon.com/ja_jp/vpc/latest/userguide/egress-only-internet-gateway.html)
+  - [Lambda オーソライザーの認証の流れ](https://docs.aws.amazon.com/ja_jp/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html#api-gateway-lambda-authorizer-flow)
+  - [インスタンスメタデータサービスバージョン2](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-metadata-v2-how-it-works.html)
+  - [混乱する代理問題](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/confused-deputy.html)
+  - [AWS FAQ](https://aws.amazon.com/jp/faqs/)
+- aws ブログ
+  - [DR戦略：パイロットライトまたはウォームスタンバイ](https://aws.amazon.com/jp/blogs/news/disaster-recovery-dr-architecture-on-aws-part-iii-pilot-light-and-warm-standby/)
+- [well-architected](https://aws.amazon.com/jp/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc&awsm.page-wa-lens-whitepapers=2)
+  - serverless application lens
+    - [mobile backend scenario](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/mobile-backend.html)
