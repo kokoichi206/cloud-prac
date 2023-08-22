@@ -1,0 +1,107 @@
+## Container
+
+### [サービスメッシュ入門](https://www.youtube.com/watch?v=uFT3oE8RNI4&list=PLzWGOASvSx6FIwIC2X1nObr1KcMCBBlqY&index=119&ab_channel=AmazonWebServicesJapan%E5%85%AC%E5%BC%8F)
+
+- サービスメッシュ
+  - アプリケーションレベルの通信を、アプリケーション自身ではなくインフラストラクチャーで制御するようにする技術
+  - アプリケーションが行う通信制御
+    - HTTP 通信のリトライやタイムアウト
+    - 通信のトレーシングやログ・メトリクスの取得
+    - TLS を使用した暗号化通信
+  - サービスメッシュ基盤
+- 経緯
+  - 分散システムにおける様々なユースケース解決のため
+    - **アーキテクチャ、言語の多様化**
+    - サービス構成法の普及
+    - 可観測性のために、**標準化されたモニタリング要求**
+  - 例
+    - チームごとに最適な技術を選択してアプリケーションを動かす
+    - 言語だけでなく VM やコンテナなど様々なコンピュー絵keiぃングプラットフォーム
+  - 目的
+    - 信頼性の確保
+    - 可観測性の確保
+- ライブラリによる通信制御の共通化
+  - 共通ライブラリの導入における課題
+    - 共通ライブラリを入れると依存関係が衝突する
+    - 言語ごとにライブラリを実装する必要があり、負担が大きい
+- 解決策: アプリケーションから通信処理を分離
+  - Proxy を挟むイメージ
+  - サービスメッシュが注力するのはアプリケーション間通信
+    - 通信制御、ログ・メトリクスの収集をかわって行う
+- サービスメッシュの仕組み
+  - プロキシをコントロールプレーンで管理
+  - Control plane と data plane
+  - in, out の両方にデータプレーンを挟む感じ
+- AWS **App Mesh**
+  - **アプリケーションレベルの通信をネットワークモデルとして定義**
+  - ネットワークモデルを Envoy のせて値に変換して配布
+- OSS
+  - 2013 SmartStack
+    - airbnb
+  - 2014 Prana
+    - Netflix
+    - サイドカー
+  - 2017 Istio
+    - google
+  - 2018 Linkerd 2.0
+    - twitter
+  - 2019 Maesh, [Kuma](https://github.com/kumahq/kuma)
+- CNCF
+  - Service Mesh Interface
+    - Kubernetes での亜intービスメッシュインタフェース
+
+### [App Mesh](https://www.youtube.com/watch?v=_fT6C_aCQ6M&list=PLzWGOASvSx6FIwIC2X1nObr1KcMCBBlqY&index=112&ab_channel=AmazonWebServicesJapan%E5%85%AC%E5%BC%8F)
+
+- App Mesh とは
+  - サービスメッシュを管理するコントロールプエともにーんをテイキュおする
+  - **ネットワークモデルを Envoy の設定に変換して配布**
+- ネットワークモデル
+  - Traffic source
+  - Service discovery
+  - Load balancer
+  - Traffic target
+- トップレベルの概念
+  - Mesh
+    - サービス間の通信制御を行う論理的な境界
+  - Virtual Node
+    - 実際のアプリケーションの論理的なポインタ
+      - ECS サービス, k8s デプロイメント
+  - Virtual Service
+    - アプリケーションの通信先を表す
+  - Virtual Router
+    - ルーティングを管理するロードバランサー
+- 周辺機能
+  - オブザーバビリティ
+    - メトリクス、ログ、トレース
+  - セキュリティ
+    - サービス間のネットワーク接続を定義
+    - 透過的な暗号化
+    - 透過的な認証・認可
+    - [SPIFFE](https://spiffe.io/) のリファレンス実装が SPIRE
+      - スパイフィー
+        - サービス間認証のフレームワークと仕様
+      - スパイヤー
+  - その他サポート
+    - クロスクラスタ
+    - クロスアカウント
+
+### [App Runner 入門](https://www.youtube.com/watch?v=1-A5XlwM7Xg&list=PLzWGOASvSx6FIwIC2X1nObr1KcMCBBlqY&index=116&ab_channel=AmazonWebServicesJapan%E5%85%AC%E5%BC%8F)
+
+- App Runner
+  - サービスを作りたい訳でインフラを構築したいわけではない
+  - 構築済みのインフラをすぐにデプロイ！
+  - コンテナ化されたウェブアプリケーションや API を簡単かつ迅速に AWS 上で動かせる
+- ユースケース
+  - モノリスアプリケーション
+  - モバイルバックエンド
+  - マイクロサービス/API
+- 特徴
+  - フルマネージドインフラストラクチャ
+    - 利用者からは、コンテナインスタンスのみ見える
+  - 自動デプロイ
+    - ダウンタイムなしで自動デプロイ
+  - オートスケール
+    - 閾値、コンテナの最小・最大
+  - ログとメトリクス
+  - セキュリティ
+    - TLS を自動で
