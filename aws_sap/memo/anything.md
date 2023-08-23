@@ -97,6 +97,9 @@
   - MQTT: Message Queuing Telemetry Transport
     - リソース制限がある元でのメッセージングプロトコル
     - pub sub をいい感じに実現するものかなー？
+- [リージョン間 VPC ピアリング接続](https://docs.aws.amazon.com/ja_jp/vpc/latest/peering/what-is-vpc-peering.html)
+  - インターリージョンVPCピアリングのトラフィックは常にグローバルAWSバックボーンにとどまる
+  - VPC リソースに対して Private IP アドレスにて通信が可能
 
 ## Links
 
@@ -110,9 +113,11 @@
   - [Lambda オーソライザーの認証の流れ](https://docs.aws.amazon.com/ja_jp/apigateway/latest/developerguide/apigateway-use-lambda-authorizer.html#api-gateway-lambda-authorizer-flow)
   - [インスタンスメタデータサービスバージョン2](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/instance-metadata-v2-how-it-works.html)
   - [混乱する代理問題](https://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/confused-deputy.html)
+  - [Direct Connect + VPN](https://docs.aws.amazon.com/ja_jp/whitepapers/latest/aws-vpc-connectivity-options/aws-direct-connect-vpn.html)
   - [AWS FAQ](https://aws.amazon.com/jp/faqs/)
 - aws ブログ
   - [DR戦略：パイロットライトまたはウォームスタンバイ](https://aws.amazon.com/jp/blogs/news/disaster-recovery-dr-architecture-on-aws-part-iii-pilot-light-and-warm-standby/)
 - [well-architected](https://aws.amazon.com/jp/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc&wa-guidance-whitepapers.sort-by=item.additionalFields.sortDate&wa-guidance-whitepapers.sort-order=desc&awsm.page-wa-lens-whitepapers=2)
   - serverless application lens
     - [mobile backend scenario](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/mobile-backend.html)
+  - [performance efficiency pillar](https://docs.aws.amazon.com/ja_jp/wellarchitected/latest/performance-efficiency-pillar/welcome.html)
