@@ -54,6 +54,47 @@
   - GET/HEAD/OPTION のみ
   - TTL = 0 は、CloudFront ではキャッシュしない
 
+### [レポート/モニタリング/ロギング](https://www.youtube.com/watch?v=tIkfu7NAeQE&ab_channel=AmazonWebServicesJapan%E5%85%AC%E5%BC%8F)
+
+- CloudFront コンソール
+  - キャッシュ統計
+    - ダウンロードを完了しなかった GET リクエストの割合など
+  - 人気オブジェクト
+    - ディストリビューションごとのリクエスト数 top50 とか
+  - トップリファラー
+  - ビューワーの情報
+    - デバイス種別
+    - ブラウザ
+    - OS
+    - ロケーション
+- モニタリング機能
+  - CloudWatch と統合された機能
+  - バージニア北部に出力
+  - CloudFront Functions
+  - CloudWatch Internet Monitor
+    - インターネットからアクセスした際の可用性とパフォーマンスのメトリクス
+- ロギング機能
+  - リクエストのログ
+    - 標準ログ
+      - S3 に保存
+      - S3 Select
+        - 標準ログに対して、クエリを実行することが可能
+      - Athena
+        - アテナ
+        - **複数の標準ログに**対して、クエリを実行
+      - QuickSight を使用した可視化: BI
+        - テーブル情報を可視化
+    - リアルタイムログ
+      - Kinesis Data Streams に連携
+      - OpenSearch Service と組み合わせて、運用ダッシュボードを作成可能
+      - CMCD: Common Media Client Data + Grafana
+  - エッジ関数のログ
+    - CloudFront Functions のログ
+      - console.log() ステートメント
+  - サービスアクティビティのログ
+    - CloudTail による API アクティビティのログ
+
+
 ### Tips
 
 - Origin Request Policy
