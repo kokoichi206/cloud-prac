@@ -1,0 +1,107 @@
+## quiz
+
+- RDS Proxy の設定とセットですることは
+  - Secrets Manager シークレットを作成し、データベースのユーザーとパスワードを保存する
+- SCP を使うために必要な準備
+  - Organizations で全ての機能を有効にする
+- Firewall Manager を使うために必要な準備
+  - Organizations で全ての機能を有効にする
+  - AWS Config の設定
+- IMDS v1, v2 はどう違うか
+  - インスタンスメタデータを通じて、IAM Role のアクセスキー・シークレットが流出しないような仕組み
+  - XFF が入ってるとトークンを発行しないなど
+- AMI がリージョン間で移行された時のキーの影響
+  - PEM (秘密鍵)はコピーされない
+  - Authorized キー (公開鍵) は AMI の OS に残る
+- DynamoDB のグローバルテーブルを使うために必要なこと
+  - Streams の有効化
+- elasticache で memcached を選択するケース
+  - 1ノードで大量の処理をさせたい時
+  - memcached はマルチスレッド対応でスケールアップに強い
+  - redis はレプリケーション対応でスケールアウト可
+  - redis は地理空間対応などさまざまなデータタイプに対応
+  - redis は encryption 対応（memcached は非対応）
+- Site-to-Site VPN 接続に必要なもの
+  - CGW: カスタマーゲートウェイ
+  - VGW: 仮想プライベートゲートウェイ
+    - デッドピア検出
+- Direct Connect の2つの接続方法
+  - 専用接続
+    - 1 Gbps 委譲
+  - ホスト接続
+    - 500 Mbps まで
+- IAM Identity Center ってなんだっけ
+  - Single Sign-On の後継
+- AWS Config で非準拠になった場合はどうするか
+  - SSM Automation などを使って自動で修正させる
+- [Secrets Manager と Parameter Store の使い分け？](https://qiita.com/tomoya_oka/items/a3dd44879eea0d1e3ef5)
+  - 連携可能なAWSサービス
+    - Secrets Manager
+      - RDS, Aurora, EC2, Lambda..
+    - Parameter Store
+      - 多数
+  - コスト
+    - Secrets Manager
+      - 有料
+    - Parameter Store
+      - 無料
+- Inspector
+  - EC2, ECR, Lambda に脆弱性スキャン
+  - SSM エージェントのみで実行できる
+    - エージェントを EC2 などにインストール
+  - 結果を EventBridge に送信し、Step Functions, Lambda などで自動修復
+- [AWS SHIELD ENGAGEMENT LAMBDA](https://s3.amazonaws.com/aws-shield-lambda/ShieldEngagementLambda.pdf) とは
+  - DDoS 攻撃を自動検知して、エスカレーションアクションを自動化する設計パターン
+  - Shield Advanced → CloudWatch アラーム → SNS トピック
+  - → E メール、Lambda → Shield Advanced API へリクエスト
+    - 自動的に AWS サポートケースを作成
+      - ビジネスサポートプラン、エンタープライズサポートプランが必要
+- Security Hub とは
+  - GuardDuty, Macie などの検出結果を、AWS Security Finding 形式という共通の JSON フォーマットに変換して統合
+- Detective
+  - いつも呼び出されない API リクエストが、**いつもとは違う送信元から呼び出されたことを GuardDuty で検出**
+  - Detective でその送信元からの最初と最後の呼び出しや、合計時間等々、調査に必要な情報を確認できる
+- AWS Storage Gateway に対応したパターン
+  - AWS 側の入り口は Storage Gateway で固定
+  - S3 を扱う → オンプレ側は S3 ファイルゲートウェイ
+  - AWS Backup, EBS snapshot を扱う → オンプレ側はボリュームゲートウェイ
+    - iSCSI ブロックストレージ
+      - iSCSI: IP ネットワークで SAN を構築するプロトコル
+    - 補完型とキャッシュ型
+  - テープゲートウェイ
+    - オンプレのバックアップソフトはそのままで、保存先を AWS の仮想テープライブラリに変更可能
+    - Glacier に保存
+- Elastic Disaster Recovery ってなんだっけ
+  - パイロットライトの1つ
+  - システムのダウンタイムを最小に抑えながら、**オンプレのサーバーを AWS に復旧**
+  - オンプレサーバーにエージェントのインストールがいる
+- プレイスメントグループの3つの戦略について
+  - クラスタ
+    - 同じネットワークセグメントに配置
+  - パーティション
+    - 同じ AZ で、ハードウェア種小貝の影響を軽減
+    - 大規模な分散・複製ワークロード
+    - 異なるラック
+  - スプレッド
+    - EC2 インスタンスごとに独自のネットワーク・電源が異なるラックに配置
+    - 同じ AZ でハード・ネット・電源などの障害リスクを軽減
+- Kendra ってなんだっけ
+  - 自然言語による検索
+  - さまざまなデータソースを横断的に検索可
+- ENI に紐づくものは
+  - private ip address
+  - mac address
+  - 物理の NIC のことか
+- Local Zones 忘れてた
+  - リージョンの拡張
+  - 東京リージョンには台湾の台北リージョンがある
+- Data API
+  - Aurora serverless での Proxy みたいなもの？
+- SIEM: Security Information and Event Management
+  - シーム
+
+## Links
+
+- [AWSのEC2 インスタンスメタデータサービスのv1(IMDSv1) とv2 (IMDSv2) の違いと効果](https://blog.takuros.net/entry/2020/09/30/111717)
+  - [Capital Oneの個人情報流出事件に思うこと](https://blog.takuros.net/entry/2019/08/12/162015)
+- [ACM の FAQ](https://aws.amazon.com/jp/certificate-manager/faqs/)
