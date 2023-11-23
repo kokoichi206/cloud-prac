@@ -62,8 +62,28 @@ helm install sample-service ./sample-service-helm --set service.type=NodePort --
 
 helm upgrade sample-service ./sample-service-helm --set service.type=NodePort --set service.nodePort=31234
 
+
+# kind にローカルの dockerfile を登録する。
+kind load --name local-dev docker-image sample-service:latest
+
+kind load --name local-dev docker-image golang-bff:latest
+
 ```
+
+
+## Next
+
+- pod 増やす
+  - 外に出す
+    - ２つ以上だと reverse proxy 的なのがいる？
+- grpc でロードバランサー
+
+## 疑問
+
+- Namespace って、区切られた間でできないことってある？
+  - どれくらいの粒度で区切るのがいい？
 
 ## Links
 
 - [Local kubernetes with kind, helm and a sample service](https://faun.pub/local-kubernetes-with-kind-helm-and-a-sample-service-4755e3e6eff4)
+- [kind でローカルの Dockerfile を使う](https://renjith85.medium.com/local-docker-registry-in-kubernetes-cluster-using-kind-8230075a7817)
