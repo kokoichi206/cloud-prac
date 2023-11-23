@@ -1,4 +1,4 @@
-module github.com/kokoichi206/cloud-prac.git/kube/kind/protobuf/gen/go/protobuf
+module github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf
 
 go 1.21.2
 
