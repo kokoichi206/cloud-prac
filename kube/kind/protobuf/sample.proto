@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "go/protobuf";
+
+package sample.service;
+
+service Sample {
+
+  rpc Health(HealthRequest) returns (HealthReply);
+}
+
+message HealthRequest {}
+message HealthReply {
+  string message = 1;
+}
