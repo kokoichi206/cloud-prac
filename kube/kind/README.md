@@ -68,7 +68,43 @@ kind load --name local-dev docker-image sample-service:latest
 
 kind load --name local-dev docker-image golang-bff:latest
 
+
+
+helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
+
+
+helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
+
+helm uninstall -n kube-system metrics-server metrics-server/metrics-server
+
+
+helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
+
+
+
+helm uninstall -n kube-system metrics-server metrics-server/metrics-server
+
+
+kind load --name local-dev docker-image golang-bff:latest
+kind load --name local-dev docker-image sample-service:latest
+kind load --name local-dev docker-image my-nginx:latest
+kind load --name local-dev docker-image golang-grpc:latest
+
+helm upgrade sample-service ./sample-service-helm --set service.type=NodePort --set service.nodePort=31234
+
+
+helm install sample-service ./sample-service-helm --set service.type=NodePort --set service.nodePort=31234
+
+
 ```
+
+- metadata の不要なラベルを削除
+- この辺の記載を合わせる
+  - deployment
+    - spec.selector.matchLabels
+    - spec.template.metadata.labels
+  - service
+    - spec.selector
 
 
 ## Next

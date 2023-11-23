@@ -31,6 +31,9 @@ serviceAccount:
 podAnnotations: {}
 podLabels: {}
 
+args:
+  - --kubelet-insecure-tls
+
 podSecurityContext: {}
   # fsGroup: 2000
 

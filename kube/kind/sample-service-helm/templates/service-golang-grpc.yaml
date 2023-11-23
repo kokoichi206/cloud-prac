@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "golang-grpc-server"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: "golang-grpc-server"
+    # {{- include "sample-service-helm.selectorLabels" . | nindent 4 }}
