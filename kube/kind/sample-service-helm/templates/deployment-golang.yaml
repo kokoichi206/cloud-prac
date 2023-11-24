@@ -53,6 +53,11 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- with .Values.volumeMounts }}
+          env:
+            - name: GRPC_GO_LOG_VERBOSITY_LEVEL
+              value: "99"
+            - name: GRPC_GO_LOG_SEVERITY_LEVEL
+              value: "info"
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
