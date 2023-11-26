@@ -1,32 +1,35 @@
-{{- if .Values.autoscaling.enabled }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "sample-service-helm.fullname" . }}
-  labels:
-    {{- include "sample-service-helm.labels" . | nindent 4 }}
+  # grpc api の deployment に対して autoscaling を行う。
+  name: "golang-grpc-server"
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "sample-service-helm.fullname" . }}
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
-  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+    name: golang-grpc-server
+  minReplicas: 2
+  maxReplicas: 10
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
-    {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
-{{- end }}
+          averageUtilization: 50
+  behavior:
+    scaleDown:
+      # デフォルトは 300s (5min)
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 20
+          periodSeconds: 30
+    # {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    # - type: Resource
+    #   resource:
+    #     name: memory
+    #     target:
+    #       type: Utilization
+    #       averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    # {{- end }}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math"
 	"net"
 	"time"
 
@@ -16,7 +17,25 @@ type handler struct {
 }
 
 func (h *handler) Health(ctx context.Context, in *pb.HealthRequest) (*pb.HealthReply, error) {
-	log.Println(time.Now())
+	// log.Println(time.Now())
+
+	// CPU を 10 秒間使い続ける。
+	go func(ctx context.Context) {
+		x := 246.0
+		defer func() {
+			fmt.Printf("x: %v\n", x)
+		}()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			default:
+			}
+			x += math.Sqrt(x)
+		}
+	}(ctx)
+	time.Sleep(7 * time.Second)
+
 	return &pb.HealthReply{
 		Message: "{\"health\": \"ok\"}",
 	}, nil

@@ -5,7 +5,7 @@ metadata:
   name: "golang-grpc-server"
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: 5
+  replicas: 2
   {{- end }}
   selector:
     matchLabels:
@@ -43,7 +43,12 @@ spec:
               containerPort: 8080
               protocol: TCP
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
           {{- with .Values.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
