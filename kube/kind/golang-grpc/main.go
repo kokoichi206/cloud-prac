@@ -10,6 +10,7 @@ import (
 
 	pb "github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 )
 
 type handler struct {
@@ -48,7 +49,11 @@ func main() {
 		log.Fatal(fmt.Sprintf("failed to listen: %v", err))
 	}
 
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.KeepaliveParams(keepalive.ServerParameters{
+			MaxConnectionAge: 60 * time.Second,
+		}),
+	)
 	pb.RegisterSampleServer(s, h)
 
 	s.Serve(lis)
