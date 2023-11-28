@@ -50,3 +50,66 @@
   - 最小権限
   - 多層防御
   - 攻撃対象領域の縮小
+
+## sec 2
+
+- コンテナは**ホストから見える Linux プロセスを実行**する
+  - コンテナかしたプロセスは通常のプロセスのようにシステムコールを使用
+    - パーミッションと権限を必要とする
+- システムコール
+  - プログラミング言語で抽象化されている
+    - アプリ開発者として最も低レイヤーの抽象化は glibc や Go の syscall かも
+    - [A beginner's guide to syscalls - Liz Rice (Aqua Security)](https://www.oreilly.com/library/view/oscon-2017/9781491976227/video306637.html)
+  - アプリコンテナは、**コンテナかどうかに関わらず、全く同じ方法でシステムコールを呼ぶ**
+    - １つのホスト上の**すべてのコンテナが同じカーネルを共有しているかはセキュリテイ上重要**
+- ファイルパーミッション
+  - 通常: ファイルの実行によって起動するプロセスはユーザー ID (UID) を継承する
+  - ファイルに setuid ビットが設定されている場合、**プロセスは**そのファイルの所有者のユーザー ID を持つことになる
+    - UID = 0 => root の UID
+    - プログラムに必要で**一般ユーザーには拡張されていない特権を与えるため**に使用される
+    - ping 実行ファイルが RAW ソケットを開く権限が必要、など
+      - ping 実行ファイルに setuid ビットを設定し root ユーザーが所有する状態でインストールするなど
+
+``` sh
+$ cp "$(which sleep)" ./mysleep
+$ ls -l mysleep
+-rwxr-xr-x 1 ubuntu ubuntu 30944 Nov 28 12:45 mysleep
+
+# setuid ビットを on にする
+$ chmod +s mysleep
+$ ls -l mysleep
+-rwsr-sr-x 1 ubuntu ubuntu 30944 Nov 28 12:45 mysleep
+```
+
+- setuid のセキュリティ影響
+  - bash に setuid をするとシェルないのすべてのユーザー操作は root の者になる？
+    - 実際には ping と同じようにユーザー ID をリセットし、権限昇格を防ぐようになる！
+  - 権限昇格の入り口になる
+  - 昔の時代に、**非 root ユーザーに特別な特権を付与するための仕組み**を提供していた
+- capability
+  - スレッドに対して割り当てる
+  - スレッドが特定のアクションを実行できるかを決定
+
+``` sh
+man capabilities
+
+$ ps
+    PID TTY          TIME CMD
+ 258998 pts/9    00:00:00 bash
+1115045 pts/9    00:00:00 ps
+# プロセスに割り当てられている capability の確認。
+$ getpcaps 258998
+258998: =
+
+$ sudo bash
+root@ubuntu:/home/ubuntu/work/linux/container# ps
+    PID TTY          TIME CMD
+1115430 pts/9    00:00:00 sudo
+1115431 pts/9    00:00:00 bash
+1115439 pts/9    00:00:00 ps
+root@ubuntu:/home/ubuntu/work/linux/container# getpcaps 1115431
+1115431: =ep
+```
+
+- 権限昇格
+  - すでに root として動作しているソフトウェアを探し、そのソフトウェアにある既知の脆弱性を利用する
