@@ -236,3 +236,421 @@ cgroup on /sys/fs/cgroup/freezer type cgroup (ro,nosuid,nodev,noexec,relatime,fr
 cgroup on /sys/fs/cgroup/rdma type cgroup (ro,nosuid,nodev,noexec,relatime,rdma)
 cgroup on /sys/fs/cgroup/cpuset type cgroup (ro,nosuid,nodev,noexec,relatime,cpuset)
 ```
+
+お, mac の方は cgroup v2 だった！
+
+``` sh
+docker run -it --rm ubuntu bash
+root@65b6c9ae2a65:/# mount | grep cgroup
+cgroup on /sys/fs/cgroup type cgroup2 (ro,nosuid,nodev,noexec,relatime)
+```
+
+## sec 4
+
+コンテナの分離。コンテナ間、およびコンテナとホストがどの程度分離されているかを把握する！
+
+コンテナは仮想マシンではないことを頭に叩き込んでおく。
+
+- namespace
+  - プロセスの**見ることのできる**リソースを制御
+    - cf: cgroup = 使用できるリソースの制御
+  - プロセスは常に TYPE ごとにそれぞれ１つの namespace に所属する！
+
+``` sh
+# 自分のマシンの namespace を確認。
+$ lsns
+        NS TYPE   NPROCS    PID USER   COMMAND
+4026531835 cgroup     31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531836 pid        31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531837 user       31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531838 uts        31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531839 ipc        31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531840 mnt        31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+4026531905 net        31 258998 ubuntu /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff528
+
+# root 以外では不正確な情報の可能性がある。
+$ sudo lsns
+```
+
+ホスト名の分離, 時間じゃないんかーい
+
+UTS: Unix Timesharing System
+
+``` sh
+$ hostname
+ubuntu
+# 各コンテナにランダムな ID を付与している。あん
+$ docker run -it --rm ubuntu bash
+root@66e4e9af18ce:/# hostname
+66e4e9af18ce
+
+# 親のプロセスから共有されていない namespace でプログラムを実行できる！
+$ man unshare
+
+# 新しい UTS namespace を持つ、新しいプロセスで sh シェルが実行される。
+$ sudo unshare --uts sh
+# hostname
+ubuntu
+# hostname experiment
+# hostname
+experiment
+# exit
+$ hostname
+ubuntu
+```
+
+プロセス ID の分離。
+
+``` sh
+# Docker コンテナ内で ps しても、そのコンテナ内で動作しているプロセスしか表示されない。
+# ホスト上で動作しているプロセスは出てこない！
+root@66e4e9af18ce:/# ps -eaf
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 11:39 pts/0    00:00:00 bash
+root          11       1  1 11:44 pts/0    00:00:00 ps -eaf
+```
+
+PID namespace により実現されている！
+
+``` sh
+$ sudo unshare --pid sh
+# whoami
+root
+# whoami
+sh: 2: Cannot fork
+# whoami
+sh: 3: Cannot fork
+# ls
+sh: 4: Cannot fork
+# exit
+
+$ ps fa
+    PID TTY      STAT   TIME COMMAND
+ 262156 pts/0    Ss     0:00 /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff5284a32690f/o
+2022110 pts/0    Sl+    0:00  \_ docker run -it --rm ubuntu bash
+
+# sudo unshare --pid --fork sh で開いた時。
+# unshare プロセスの子プロセスとして実行されるようになる。
+$ ps fa
+ 262156 pts/0    Ss     0:00 /bin/bash --init-file /home/ubuntu/.vscode-server/bin/2b35e1e6d88f1ce073683991d1eff5284a32690f/o
+2028433 pts/0    S      0:00  \_ sudo unshare --pid --fork sh
+2028434 pts/0    S      0:00      \_ unshare --pid --fork sh
+2028435 pts/0    S+     0:00          \_ sh
+
+
+$ man ps | grep /proc
+       This ps works by reading the virtual files in /proc.  This ps does not need to be setuid kmem or have any
+```
+
+実行中のプロセス ID の namespace に関係なく ps は実行中のプロセスに関する情報を /proc に探しに行く！
+
+ps が新しい namespace の情報のみを返すには、カーネルが ns のプロセスに関する情報を書き込める新たな /proc ディレクトリのコピーが必要。
+proc が root 直下であることを考えると、これは root ディレクトリの変更を意味する。
+
+**root ディレクトリの変更**
+
+``` sh
+$ mkdir new_root
+
+# 新しい root ディレクトリの中に bin ディレクトリがなく、/bin/bash を実行できないことが原因！
+$ sudo chroot new_root/
+chroot: failed to run command ‘/bin/bash’: No such file or directory
+
+# https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/aarch64/
+
+
+mkdir alpine
+cd alpine/
+curl -o alpine.tar.gz https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/aarch64/alpine-minirootfs-3.18.0-aarch64.tar.gz
+ls
+tar xvf alpine.tar.gz
+rm alpine.tar.gz
+cd ..
+
+sudo chroot alpine ls
+```
+
+ns と root ディレクトリ変更を組み合わせる。
+
+途中、プロセス情報を格納するために proc タイプの擬似ファイルシステムとしてマウントしている。
+
+``` sh
+r$ sudo unshare --pid --fork chroot alpine sh
+/ # ls
+bin    dev    etc    home   lib    media  mnt    opt    proc   root   run    sbin   srv    sys    tmp    usr    var
+/ # ps
+PID   USER     TIME  COMMAND
+/ # mount -t proc proc proc
+/ # ps
+PID   USER     TIME  COMMAND
+    1 root      0:00 sh
+    5 root      0:00 ps
+```
+
+マウントの分離。
+
+バインドマウントができると source ディレクトリの内容も target で利用できるようになる。
+
+``` sh
+$ sudo unshare --mount sh
+# mkdir source
+# ls
+alpine  main.go  mysleep  new_root  source
+# touch source/HELLO
+# ls source
+HELLO
+# mkdir target
+# ls target
+# mount --bind source target
+# ls target
+HELLO
+```
+
+ネットワークインタフェースとルーティングテーブルの隔離。
+
+network ns
+
+``` sh
+$ sudo lsns -t net
+        NS TYPE NPROCS     PID USER                NETNSID NSFS COMMAND
+4026531905 net     278       1 root             unassigned      /sbin/init fixrtc splash
+4026532304 net       1 2835439 rtkit            unassigned      /usr/libexec/rtkit-daemon
+4026532382 net       2  670078 root                      1      /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --wor
+4026532461 net       6  670099 systemd-coredump          0      postgres
+4026532526 net       1  670108 root                      2      /go/bin/all-in-one-linux
+4026532595 net       1 1999108 root                      3      sleep 100000
+
+
+$ sudo unshare --net bash
+root@ubuntu:/home/ubuntu/work/linux/container# lsns -t net
+        NS TYPE NPROCS     PID USER                NETNSID NSFS COMMAND
+4026531905 net     277       1 root             unassigned      /sbin/init fixrtc splash
+4026532304 net       1 2835439 rtkit            unassigned      /usr/libexec/rtkit-daemon
+4026532382 net       2  670078 root             unassigned      /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --wor
+4026532461 net       6  670099 systemd-coredump unassigned      postgres
+4026532526 net       1  670108 root             unassigned      /go/bin/all-in-one-linux
+4026532595 net       1 1999108 root             unassigned      sleep 100000
+4026532659 net       2 2066121 root             unassigned      bash
+```
+
+``` sh
+$ sudo unshare --net bash
+# 最初はループバックインタフェースしかない！！！ -> コンテナへは通信できない。
+root@ubuntu:/home/ubuntu/work/linux/container# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+```
+
+仮想イーサネットインタフェースのペアを作成。コンテナの ns とデフォルトの network ns を接続する。
+
+``` sh
+# 別のターミナルで。
+$ sudo su
+root@ubuntu:/home/ubuntu/work/linux# lsns -t net
+        NS TYPE NPROCS     PID USER                NETNSID NSFS COMMAND
+4026531905 net     286       1 root             unassigned      /sbin/init fixrtc splash
+4026532304 net       1 2835439 rtkit            unassigned      /usr/libexec/rtkit-daemon
+4026532382 net       2  670078 root                      1      /usr/bin/dumb-init /entrypoint run --user=gitlab-runner --wor
+4026532461 net       6  670099 systemd-coredump          0      postgres
+4026532526 net       1  670108 root                      2      /go/bin/all-in-one-linux
+4026532595 net       1 1999108 root                      3      sleep 100000
+4026532659 net       1 2076651 root             unassigned      bash
+
+# type veth = 仮想イーサネットペア
+root@ubuntu:/home/ubuntu/work/linux# ip link add ve1 netns 2076651 type veth peer name ve2 netns 1
+You have new mail in /var/mail/root
+```
+
+この状態で元々作成していた bash から ip a を再度調べる。
+コンテナのプロセス内部から見えるようになっている！
+
+``` sh
+root@ubuntu:/home/ubuntu/work/linux/container# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ve1@if30: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN group default qlen 1000
+    link/ether ce:4a:d5:d2:a5:a6 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+You have new mail in /var/mail/root
+```
+
+link は down になっているので立ち上げる。
+
+``` sh
+# コンテナ内
+root@ubuntu:/home/ubuntu/work/linux/container# ip link set ve1 up
+# ホストのルート
+root@ubuntu:/home/ubuntu/work/linux# ip link set ve2 up
+
+# 立ち上がったことを確認
+root@ubuntu:/home/ubuntu/work/linux/container# ip a
+1: lo: <LOOPBACK> mtu 65536 qdisc noop state DOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: ve1@if30: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether ce:4a:d5:d2:a5:a6 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::cc4a:d5ff:fed2:a5a6/64 scope link
+       valid_lft forever preferred_lft forever
+```
+
+IP トラフィックを送信するために IP アドレスを付与。
+
+``` sh
+# コンテナ内
+root@ubuntu:/home/ubuntu/work/linux/container# ip addr add 192.168.1.100/24 dev ve1
+# ホストのルート
+root@ubuntu:/home/ubuntu/work/linux# ip addr add 192.168.1.200/24 dev ve2
+
+# コンテナ内のルーティングテーブルに IP 経路を追加する効果もある。
+# network ns はルーティングテーブルも分離するため、これはホストとは独立している！
+root@ubuntu:/home/ubuntu/work/linux/container# ip route
+192.168.1.0/24 dev ve1 proto kernel scope link src 192.168.1.100
+
+
+root@ubuntu:/home/ubuntu/work/linux/container# ip link set lo up
+root@ubuntu:/home/ubuntu/work/linux/container# ping 192.168.1.100
+PING 192.168.1.100 (192.168.1.100) 56(84) bytes of data.
+64 bytes from 192.168.1.100: icmp_seq=1 ttl=64 time=0.063 ms
+64 bytes from 192.168.1.100: icmp_seq=2 ttl=64 time=0.113 ms
+64 bytes from 192.168.1.100: icmp_seq=3 ttl=64 time=0.117 ms
+^C
+--- 192.168.1.100 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2030ms
+rtt min/avg/max/mdev = 0.063/0.097/0.117/0.024 ms
+```
+
+user ns
+
+プロセスがユーザーおよびグループ ID の独自のビューを持てるようにする。
+プロセス ID と同じく、ユーザーとグループはホスト上に存在するが、異なる ID を持つことができる。
+
+**コンテナ内の ID 0 の root ユーザーを、ホスト上の非 root ユーザーにマッピングすることができる！**
+
+一般に新しい ns を作成するには root ユーザー権限が必要 ⇨ そのため Docker デーモンは root ユーザで実行される！
+しかし user ns は例外！
+
+``` sh
+$ unshare --user bash
+$ id
+uid=65534(nobody) gid=65534(nogroup) groups=65534(nogroup)
+$ echo $$
+2090816
+```
+
+ns の内側とホストとのユーザー ID の対応づけは `/proc/<pid>/uid_map` に存在する。
+
+``` sh
+# 子プロセスから見たマッピングする最小 ID, ホスト上でマッピングされるべき最小 ID, マッピングされる ID の数。
+## どういった意味で最小、っていってるんだっけ。
+ubuntu@ubuntu:~/work/linux$ sudo echo '0 1000 1' > /proc/2090816/uid_map
+
+nobody@ubuntu:~/work/linux/container$ id
+uid=0(root) gid=65534(nogroup) groups=65534(nogroup)
+
+nobody@ubuntu:~/work/linux/container$ capsh --print | grep Current
+Current: =ep
+```
+
+user ns を利用すると、非特権ユーザーがコンテナ化されたプロセス内で事実上 root ユーザーとして振る舞える！
+→ rootless コンテナ
+
+
+プロセス間通信
+（IPC namespace: Inter Process Communication）
+
+IPC を利用するには、２つのプロセスが同じ IPC ns のメンバーである必要がある。
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ ipcmk -M 1000
+Shared memory id: 2
+ubuntu@ubuntu:~/work/linux$ ipcs
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status
+0x0052e2c1 0          postgres   600        56         6
+0xeae3a8d4 1          ubuntu     644        1000       0
+0xf568846f 2          ubuntu     644        1000       0
+
+------ Semaphore Arrays --------
+key        semid      owner      perms      nsems
+```
+
+独自の IPC ns を持つプロセスには表示されない。
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ sudo unshare --ipc sh
+# ipcs
+
+------ Message Queues --------
+key        msqid      owner      perms      used-bytes   messages
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status
+
+------ Semaphore Arrays --------
+key        semid      owner      perms      nsems
+
+# whoami
+root
+```
+
+cgroup ns
+
+cgroup ファイルシステムの chroot のようなもの。
+プロセスが自分の cgroup よりも上位の cgroup ディレクトリの設定を閲覧できないようにする。
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ cat /proc/self/cgroup
+10:cpuset:/
+9:rdma:/
+8:freezer:/
+7:pids:/user.slice/user-1000.slice/session-7047.scope
+6:cpu,cpuacct:/user.slice
+5:perf_event:/
+4:devices:/user.slice
+3:net_cls,net_prio:/
+2:blkio:/user.slice
+1:name=systemd:/user.slice/user-1000.slice/session-7047.scope
+0::/user.slice/user-1000.slice/session-7047.scope
+ubuntu@ubuntu:~/work/linux$ sudo unshare --cgroup bash
+root@ubuntu:/home/ubuntu/work/linux# cat /proc/self/cgroup
+10:cpuset:/
+9:rdma:/
+8:freezer:/
+7:pids:/
+6:cpu,cpuacct:/
+5:perf_event:/
+4:devices:/
+3:net_cls,net_prio:/
+2:blkio:/
+1:name=systemd:/
+0::/
+```
+
+ホストから見たコンテナ**プロセス**
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ docker run --rm -it ubuntu bash
+root@9db3142074d4:/# sleep 1000 &
+[1] 10
+```
+
+ホストから見ると、2120918 が割り当てられている。
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ ps -C sleep
+    PID TTY          TIME CMD
+1221091 ?        00:00:00 sleep
+1999108 ?        00:00:00 sleep
+2119619 ?        00:00:00 sleep
+2119870 ?        00:00:00 sleep
+2120918 pts/0    00:00:00 sleep
+2120935 ?        00:00:00 sleep
+```
+
+プロセス ID が大きく異なるが、**どちらも同じプロセスを指している**ことに変わりはない！
+
+このように、**コンテナ内のプロセスはホストから見える。**
+
+コンテナを実行するために特別に設計された『Thin OS』ディストリビューションもいくつか存在する！
