@@ -113,3 +113,126 @@ root@ubuntu:/home/ubuntu/work/linux/container# getpcaps 1115431
 
 - 権限昇格
   - すでに root として動作しているソフトウェアを探し、そのソフトウェアにある既知の脆弱性を利用する
+
+## sec 3
+
+control group (cgroup)
+
+- cgroup
+  - メモリ、CPU、ネットワーク入出力などのリソースを制限
+  - What Have Namespaces Done for You Lately?
+    - https://www.youtube.com/watch?v=MHv6cWjvQjM
+- 階層
+  - 管理対象のリソースの種類ごとに cgroup の階層がある
+    - 各階層は cgroup のコントローラーによって管理される
+  - パラメータと情報がある
+
+``` sh
+$ ls /sys/fs/cgroup/
+blkio  cpu,cpuacct  cpuset   freezer  net_cls,net_prio  perf_event  rdma     unified
+cpu    cpuacct      devices  net_cls  net_prio          pids        systemd
+
+$ sudo apt install cgroup-tools
+
+# コンテナ内じゃなく host での shell から確認。
+$ cat /proc/$$/cgroup
+10:cpuset:/
+9:rdma:/
+8:freezer:/
+7:pids:/user.slice/user-1000.slice/session-7047.scope
+6:cpu,cpuacct:/user.slice
+5:perf_event:/
+4:devices:/user.slice
+3:net_cls,net_prio:/
+2:blkio:/user.slice
+1:name=systemd:/user.slice/user-1000.slice/session-7047.scope
+0::/user.slice/user-1000.slice/session-7047.scope
+
+lscgroup cpu:/
+```
+
+``` sh
+# プロセスを cgroup に割り当てる方法。
+## プロセス id を cgroup.procs ファイルに書き込むだけ！
+
+# Docker の作成する cgroup
+$ ls */docker | grep docker
+blkio/docker:
+cpu,cpuacct/docker:
+cpu/docker:
+cpuacct/docker:
+cpuset/docker:
+devices/docker:
+freezer/docker:
+net_cls,net_prio/docker:
+net_cls/docker:
+net_prio/docker:
+perf_event/docker:
+pids/docker:
+rdma/docker:
+systemd/docker:
+unified/docker:
+```
+
+やっぱり自分のカーネルは memory をサポートしてないらしい。
+
+``` sh
+$ docker run --rm --memory 100M -d alpine sleep 100000
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+579b34f0a95b: Pull complete
+Digest: sha256:eece025e432126ce23f223450a0326fbebde39cdf496a85d8c016293fc851978
+Status: Downloaded newer image for alpine:latest
+WARNING: Your kernel does not support memory limit capabilities or the cgroup is not mounted. Limitation discarded.
+883374c69b10b4809664588247844c5bdf3ca758be4b4dd3330cde2a9bb629c3
+```
+
+- cgroup v2
+  - Linux カーネルは 2016~
+  - **一般的なコンテナランタイムの実装は cgroup v1 を前提**としている
+    - 今はどう？流石に v2 ？
+- v1 と v2 の違い
+  - **cgroup v2 ではプロセスがコントローラごとに異なる cgroup に所属できない！**
+  - v1 ではプロセスは memory/mygroup と pids/yourgroup に参加できた
+    - v2 ではよりシンプルになった
+  - v2 で rootless コンテナのサポートが強化
+- Docker での cgroup v2
+  - v20.10 以降、cgroup v2 のサポート
+  - cgroup **v2 に対応したホストマシンのカーネルとコンテナランタイムが必要**
+  - **コンテナの cgroup バージョンはホストマシンに依存**
+    - カーネル起動オプションに systemd.unified_cgroup_hierarchy=1 の設定？
+
+Docker での cgroup について
+
+https://docs.docker.com/config/containers/runmetrics/#enumerate-cgroups
+
+``` sh
+$ grep cgroup /proc/mounts
+tmpfs /sys/fs/cgroup tmpfs ro,nosuid,nodev,noexec,mode=755 0 0
+cgroup2 /sys/fs/cgroup/unified cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
+cgroup /sys/fs/cgroup/systemd cgroup rw,nosuid,nodev,noexec,relatime,xattr,name=systemd 0 0
+cgroup /sys/fs/cgroup/blkio cgroup rw,nosuid,nodev,noexec,relatime,blkio 0 0
+cgroup /sys/fs/cgroup/net_cls,net_prio cgroup rw,nosuid,nodev,noexec,relatime,net_cls,net_prio 0 0
+cgroup /sys/fs/cgroup/devices cgroup rw,nosuid,nodev,noexec,relatime,devices 0 0
+cgroup /sys/fs/cgroup/perf_event cgroup rw,nosuid,nodev,noexec,relatime,perf_event 0 0
+cgroup /sys/fs/cgroup/cpu,cpuacct cgroup rw,nosuid,nodev,noexec,relatime,cpu,cpuacct 0 0
+cgroup /sys/fs/cgroup/pids cgroup rw,nosuid,nodev,noexec,relatime,pids 0 0
+cgroup /sys/fs/cgroup/freezer cgroup rw,nosuid,nodev,noexec,relatime,freezer 0 0
+cgroup /sys/fs/cgroup/rdma cgroup rw,nosuid,nodev,noexec,relatime,rdma 0 0
+cgroup /sys/fs/cgroup/cpuset cgroup rw,nosuid,nodev,noexec,relatime,cpuset 0 0
+
+# 自分の使ってる Docker は cgroup v1 っぽいな。。。
+$ docker run -it --rm ubuntu bash
+root@acc5bdb366fd:/# mount | grep cgroup
+tmpfs on /sys/fs/cgroup type tmpfs (rw,nosuid,nodev,noexec,relatime,mode=755)
+cgroup on /sys/fs/cgroup/systemd type cgroup (ro,nosuid,nodev,noexec,relatime,xattr,name=systemd)
+cgroup on /sys/fs/cgroup/blkio type cgroup (ro,nosuid,nodev,noexec,relatime,blkio)
+cgroup on /sys/fs/cgroup/net_cls,net_prio type cgroup (ro,nosuid,nodev,noexec,relatime,net_cls,net_prio)
+cgroup on /sys/fs/cgroup/devices type cgroup (ro,nosuid,nodev,noexec,relatime,devices)
+cgroup on /sys/fs/cgroup/perf_event type cgroup (ro,nosuid,nodev,noexec,relatime,perf_event)
+cgroup on /sys/fs/cgroup/cpu,cpuacct type cgroup (ro,nosuid,nodev,noexec,relatime,cpu,cpuacct)
+cgroup on /sys/fs/cgroup/pids type cgroup (ro,nosuid,nodev,noexec,relatime,pids)
+cgroup on /sys/fs/cgroup/freezer type cgroup (ro,nosuid,nodev,noexec,relatime,freezer)
+cgroup on /sys/fs/cgroup/rdma type cgroup (ro,nosuid,nodev,noexec,relatime,rdma)
+cgroup on /sys/fs/cgroup/cpuset type cgroup (ro,nosuid,nodev,noexec,relatime,cpuset)
+```
