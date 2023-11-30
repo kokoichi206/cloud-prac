@@ -691,3 +691,50 @@ ubuntu@ubuntu:~/work/linux$ ps -C sleep
   - カーネルを動かすためのオーバーヘッドがある
 - 分離の点から比較
   - コンテナがカーネルを共有しているという単純な事実は、**ただ分離しただけではコンテナの方が脆弱性が高い**ことを意味する
+
+## sec 6
+
+- コンテナイメージ
+  - root ファイルシステム
+    - FROM, ADD, COPY, RUN
+  - 設定情報
+    - USER, PORT, ENV
+- **OCI: Open Container Initiative**
+  - コンテナイメージとランタイムに関する標準を定義
+
+``` sh
+docker image inspect mysql:8.0.27
+```
+
+- build
+  - コマンドを API リクエストに変換し、Docker ソケットを介して Docker デーモンに送信する
+- Docker デーモン
+  - コンテナとコンテナイメージの両方を実行・管理する
+  - コンテナの作成には ns の作成が必要であるため root としての実行が必要
+    - Docker デーモンへ依存せずにコンテナイメージをビルドするための代替ツールが出てきた
+- デーモンレスビルド
+  - [BuildKit](https://docs.docker.jp/develop/develop-images/build_enhancements.html)
+    - Docker の rootless ビルドモードの基礎になる
+  - podman
+  - bazel
+    - 毎回同じイメージを再現できる
+  - Kaniko
+    - k8s 内でのビルド
+- コンテナレジストリ
+- ビルド時のセキュリティ
+  - ベースイメージ
+    - ベースイメージが小さいほど、不要なコードが含まれる可能性が小さくなり攻撃対象領域も小さくなる
+  - マルチステージビルド
+  - 非 root ユーザー
+  - setuid バイナリを避ける
+  - 不要なコードを避ける
+- レジストリのセキュリティ
+  - イメージの署名？
+  - in-todo
+- デプロイのセキュリティ
+  - アドミッションコントロール
+    - コンテナにインスタンス化する前に、コンテナイメージに対していくつかの重要なセキュリティチェックを実行できる！
+
+## Links
+
+- [docker guide/layers](https://docs.docker.com/build/guide/layers/)
