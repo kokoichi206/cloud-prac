@@ -754,6 +754,87 @@ docker image inspect mysql:8.0.27
     - パッチバージョンって、固定しておいた方がいいのか？
       - **スキャンする時に、パッチバージョンが最新のものだと検出できない可能性がありそう**
 
+## sec 8
+
+- サンドボックス
+  - アプリケーションを分離してリソースへのアクセスを制限する
+- seccomp: secure computing mode
+  - アプリケーションが実行できるシステムコールを制限する
+  - Docker のデフォルト seccomp プロファイルは、300 以上のシステムコールのうち 40 以上をブロックする
+    - **悪影響はほとんどないので使用するのがいい**
+  - Docker では seccomp がデフォルトで使用される
+    - k8s にはデフォルトで適応されるものがなさそう
+  - [k8s seccomp](https://kubernetes.io/docs/tutorials/security/seccomp/)
+    - kind の例もある
+- システムコールをより正確に把握する
+  - strace
+  - eBPF: extended Berkeley Packet Filter
+    - **seccomp は BPF を使用して送信されるシステムコールを制限している**
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ strace -c echo hello
+hello
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 47.47    0.003495        3495         1           execve
+ 21.08    0.001552          40        38        20 openat
+ 10.88    0.000801          29        27         6 newfstatat
+  7.61    0.000560          26        21           mmap
+  5.19    0.000382          19        20           close
+  1.55    0.000114          28         4           mprotect
+  1.28    0.000094          31         3           munmap
+  1.21    0.000089          29         3           read
+  0.86    0.000063          21         3           brk
+  0.62    0.000046          46         1         1 faccessat
+  0.60    0.000044          44         1           write
+  0.34    0.000025          25         1           getrandom
+  0.30    0.000022          22         1           prlimit64
+  0.27    0.000020          20         1           set_tid_address
+  0.26    0.000019          19         1           futex
+  0.26    0.000019          19         1           rseq
+  0.24    0.000018          18         1           set_robust_list
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.007363                   128        27 total
+```
+
+- AppArmor: Application Armor
+  - LSM: Linux Security Module の１つ
+  - 強制アクセス制御
+    - MAC: Mandatory Access Control
+
+``` sh
+ubuntu@ubuntu:~/work/linux$ cat /sys/module/apparmor/parameters/enabled
+Y
+```
+
+- SELinux: Security-Enhanced Linux
+  - LSM の1種
+  - Red Hat のディストリビューションをホストで使ってる場合、SELinux はすでに有効な可能性が高い
+  - プロセスがファイルやその他のプロセスにアクセスできるかを制限する
+
+``` sh
+ls -lZ
+ps -axZ
+
+ps fax
+```
+
+- Kata Containers
+  - コンテナを別の仮想マシン内で実行
+  - AWS: コンテナを実行するために特別に設計された軽量の仮想マシン
+- Firecracker
+  - ハイパーバイザによる安全な分離と共有カーネルを使わない仮想マシン
+  - 起動時間が100ms程度！！
+  - Lambda, Fargate
+  - **一般的なカーネルには含まれるが、コンテナでは不要な機能を削除したため高速**
+    - 必要不可欠なデバイス以外を取り除く
+- Unikernel
+  - **アプリケーションとそのアプリケーションが必要とする OS の部分からなる専用のマシンイメージを作成する**
+  - ハイパーバイザ上で直接実行可能
+    - **通常の仮想マシンと同じレベルの分離**
+  - 爆速な起動時間
+
 ## Links
 
 - [docker guide/layers](https://docs.docker.com/build/guide/layers/)
+- [A Go Programmer's Guide to Syscalls](https://www.youtube.com/watch?v=01w7viEZzXQ&ab_channel=GopherAcademy)
