@@ -893,7 +893,97 @@ Current IAB:
 
 - **サイドカーコンテナ**
   - アプリケーションコンテナの **ns に意図的にアクセスすることで、アプリケーションから機能を委譲する**
-  - 
+
+## sec 10
+
+- コンテナファイアウォール
+  - コンテナとの間で流れるトラフィックを制御可
+    - k8s → ネットワークポリシー（ネットワークプラグイン）
+  - 他のネットワークセキュリティツールと組み合わせ
+- OSI 参照モデル
+  - L4:
+    - TCP, UDP が使われる
+    - port 番号が適応される
+  - L3:
+    - IP パケットが通過する
+    - IPv4, IPv6
+  - L2:
+    - MAC アドレス
+  - L1:
+    - コンテナのネットワークインタフェースは L1 でも仮想化されている
+- コンテナの IP アドレス
+  - k8s では pod が独自の IP アドレスを持つ
+    - IP アドレスによって他のすべての Pod にアクセスできる
+      - 通常とは考え方が異なる
+  - **NAT はプライベートネットワーク内で IP アドレスの大部分を再利用できることを意味する**
+  - k8s
+    - ネットワークセキュリティポリシー
+    - セグメンテーション
+  - Service in k8s
+    - **NAT の一種！**
+- L3/L4 のルーティング
+  - L3:
+    - IP パケットのネクストホップの決定に関係
+    - 負荷分散、NAT、ファイアウォールなどなども可能
+  - cf. L4 で動作させれば、ポート番号にも対応できる
+  - [netfilter](https://netfilter.org/) というカーネルの機能に依存
+- iptables
+  - netfilter を使用してカーネルで処理される IP パケットの処理ルールを設定
+    - filter table
+    - nat table
+  - k8s の service の数が多くなると性能問題につながる
+    - IPVS の使用
+      - IP Virtual Server
+      - ハッシュテーブル
+
+``` sh
+while true; do echo -e "hello" | nc -l 8001 -N; done
+
+$ curl localhost:8001
+curl: (1) Received HTTP/0.9 when not allowed
+$ curl --http0.9 localhost:8001
+hello
+
+
+while true; do echo -e "HTTP/1.1 200 OK\r\n\r\nhello" | nc -l 8001 -N; done
+
+$ curl localhost:8001
+hello
+```
+
+iptables のルール変更
+
+``` sh
+$ sudo iptables -I INPUT -j REJECT -p tcp --dport=8001
+
+$ sudo iptables -L | grep 8001 -C2
+Chain INPUT (policy DROP)
+target     prot opt source               destination
+REJECT     tcp  --  anywhere             anywhere             tcp dpt:8001 reject-with icmp-port-unreachable
+ufw-before-logging-input  all  --  anywhere             anywhere
+ufw-before-input  all  --  anywhere             anywhere
+
+# iptables によって弾かれた！
+$ curl localhost:8001
+curl: (7) Failed to connect to localhost port 8001: Connection refused
+```
+
+見てきたように、ネットワークポリシーは L4 までで動作する。
+
+- サービスメッシュ
+  - L5-7 で実装される
+  - クラウドネイティブなエコシステムの例
+    - Istio, Envoy,mLinkerd
+  - いろいろ
+    - mTLS
+    - ネットワークポリシー
+  - サービスメッシュのサイドカーコンテナ
+    - プリケーションと同じ pod に存在する
+- Istio Ambient Mesh (2022/09)
+  - サイドカーが廃止になった
+  - メリット
+    - 運用の簡素化
+    - リソースの効率的な利用
 
 ## Links
 
