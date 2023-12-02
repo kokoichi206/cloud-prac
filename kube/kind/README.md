@@ -15,7 +15,7 @@ kubectl get services
 # check configurations
 helm install sample-service --dry-run --debug ./sample-service-helm
 
-# with node port (access from outside)
+# with node port (access from outside)あ
 helm install sample-service ./sample-service-helm --set service.type=NodePort --set service.nodePort=31234
 
 
@@ -226,13 +226,6 @@ Server 側で Timeout しておくと、接続が切れたタイミングでそ�
 ## Subcharts
 
 - [helm-best-practice](https://www.argonaut.dev/blog/helm-best-practices)
-
-## Next
-
-- pod 増やす
-  - 外に出す
-    - ２つ以上だと reverse proxy 的なのがいる？
-- grpc でロードバランサー
 
 ## 疑問
 
