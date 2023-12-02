@@ -39,6 +39,12 @@ func main() {
 	// 今回はポート 8080 でたてる。
 	r := gin.Default()
 	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"status": "ok",
+		})
+	})
+
+	r.GET("/go", func(c *gin.Context) {
 		ctx := c.Request.Context()
 		res, err := gprcClient.Health(ctx, &pb.HealthRequest{})
 		if err != nil {
