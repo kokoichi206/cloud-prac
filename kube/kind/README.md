@@ -223,6 +223,10 @@ Server 側で Timeout しておくと、接続が切れたタイミングでそ�
 - [Kubernetes上でgRPCサービスを動かす](https://deeeet.com/writing/2018/03/30/kubernetes-grpc/)
   - 2018/03
 
+## Subcharts
+
+- [helm-best-practice](https://www.argonaut.dev/blog/helm-best-practices)
+
 ## Next
 
 - pod 増やす
@@ -239,3 +243,4 @@ Server 側で Timeout しておくと、接続が切れたタイミングでそ�
 
 - [Local kubernetes with kind, helm and a sample service](https://faun.pub/local-kubernetes-with-kind-helm-and-a-sample-service-4755e3e6eff4)
 - [kind でローカルの Dockerfile を使う](https://renjith85.medium.com/local-docker-registry-in-kubernetes-cluster-using-kind-8230075a7817)
+- [distroless/base](https://github.com/GoogleContainerTools/distroless/blob/main/base/README.md)
