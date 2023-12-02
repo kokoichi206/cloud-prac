@@ -834,6 +834,67 @@ ps fax
     - **通常の仮想マシンと同じレベルの分離**
   - 爆速な起動時間
 
+## sec 9
+
+- デフォルトでは root で実行される
+  - root として実行されている Docker デーモンが代わりにコンテナを作成
+  - 攻撃者が root として実行されているコンテナから外に出てしまうと、ホストへの完全な root アクセスを持つことになる
+- root で実行する良さ
+  - 1024 以下のポートを開くには `CAP_NET_BIND_SERVICE` が必要
+    - 最も簡単には root ユーザで実行すること
+  - パッケージマネージャを使用してソフトウェアをインストールするケース
+    - apt, yum
+- コンテナ**実行時に**ソフトウェアのパッケージ**インストールをしない**
+  - **ビルド時にやる**
+  - なぜ
+    - 非効率
+    - 脆弱性のスキャンができない
+    - 読み取り専用で実行できるようになる
+      - docker -> --read-only, k8s -> ReadOnlyRootFileSystem
+    - イミュータブルコンテナ
+
+``` sh
+$ whoami
+ubuntu
+$ docker run -it alpine sh
+/ # whoami
+root
+/ # sleep 100
+
+# 別ターミナルから確認。ホストの root と同じであることがわかる。
+$ ps -fC sleep
+UID          PID    PPID  C STIME TTY          TIME CMD
+root      137019  136503  0 18:17 pts/0    00:00:00 sleep 100
+```
+
+- `--privileged` オプション
+  - **コンピューティング史上最も危険なフラグ**と呼ばれてるらしい。。。
+
+``` sh
+# ここで付与されている capability は実装に依存している。
+$ docker run --rm --network=host alpine sh -c 'apk add -U libcap; capsh -
+-print | grep Current'
+Current: cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap=ep
+Current IAB: !cap_dac_read_search,!cap_linux_immutable,!cap_net_broadcast,!cap_net_admin,!cap_ipc_lock,!cap_ipc_owner,!cap_sys_module,!cap_sys_rawio,!cap_sys_ptrace,!cap_sys_pacct,!cap_sys_admin,!cap_sys_boot,!cap_sys_nice,!cap_sys_resource,!cap_sys_time,!cap_sys_tty_config,!cap_lease,!cap_audit_control,!cap_mac_override,!cap_mac_admin,!cap_syslog,!cap_wake_alarm,!cap_block_suspend,!cap_audit_read
+
+# privileged 付き。
+$ docker run --rm -it --network=host --privileged alpine sh -c 'apk add -U libcap; capsh --print | grep Current'
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/main/aarch64/APKINDEX.tar.gz
+fetch https://dl-cdn.alpinelinux.org/alpine/v3.18/community/aarch64/APKINDEX.tar.gz
+Current: =ep
+Current IAB:
+```
+
+- `=ep`
+  - https://unix.stackexchange.com/questions/515881/what-does-the-ep-capability-mean
+    - `=` は `all=` と同じ
+    - p = capabilities permitted
+    - e = capabilities effective
+
+- **サイドカーコンテナ**
+  - アプリケーションコンテナの **ns に意図的にアクセスすることで、アプリケーションから機能を委譲する**
+  - 
+
 ## Links
 
 - [docker guide/layers](https://docs.docker.com/build/guide/layers/)
