@@ -72,14 +72,17 @@ kind load --name local-dev docker-image golang-bff:latest
 
 helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
 
-
+# this is not working...?
 helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
 
 helm uninstall -n kube-system metrics-server metrics-server/metrics-server
 
-
+# this is not working...?
+## this causes Backoff...
 helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
 
+
+helm upgrade -n kube-system --install metrics-server metrics-server/metrics-server
 
 
 helm uninstall -n kube-system metrics-server metrics-server/metrics-server
@@ -191,8 +194,24 @@ https://koko206.hatenablog.com/entry/2023/11/25/020948
 - Metrics APIを介してメトリクスを提供するために、Metrics serverによるモニタリングがクラスター内にデプロイされている必要があります
 
 ``` sh
+helm upgrade -n kube-system --install metrics-server metrics-server/metrics-server
+```
+
+```
+Back-off restarting failed container metrics-server in pod
+```
+
+``` sh
+  Warning  Unhealthy  3s (x10 over 83s)  kubelet            Readiness probe failed: HTTP probe failed with statuscode: 500
+```
+
+``` sh
 kubectl edit deploy metrics-server -n kube-system
 ```
+
+kubelet-insecure-tls と v2 を入れるだけ。
+
+**ここもチャートとして yaml ファイルで持っておきたい（helm install しなくて済むようにしたい）。**
 
 ``` yaml
       - args:
@@ -227,10 +246,118 @@ Server 側で Timeout しておくと、接続が切れたタイミングでそ�
 
 - [helm-best-practice](https://www.argonaut.dev/blog/helm-best-practices)
 
+## istio
+
+[Install with Helm](https://istio.io/latest/docs/setup/install/helm/)
+
+metallb 不要な気がする。。。？
+
+``` sh
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb --timeout=90s
+kubectl apply -f sample-service-helm/templates/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml\n
+
+kubectl apply -f https://kind.sigs.k8s.io/examples/loadbalancer/metallb-config.yaml
+
+kubectl apply -f sample-service-helm/templates/metallb.yaml
+```
+
+多分ここから
+
+``` sh
+helm repo add istio https://istio-release.storage.googleapis.com/charts
+helm repo update
+```
+
+``` sh
+# ns の作成、ラベル付与って helm で無理なん？
+kubectl create namespace istio-system
+helm install istio-base istio/base -n istio-system --set defaultRevision=default
+```
+
+``` sh
+# istioctl install --set profile=demo -y
+istioctl install --set profile=default -y
+# ns にラベル付与。
+kubectl label namespace default istio-injection=enabled
+
+kubectl get ns -L istio-injection
+
+kc get all
+```
+
+``` sh
+# https://istio.io/latest/about/faq/security/#enabling-disabling-mtls
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: "default"
+  namespace: "istio-system"
+spec:
+  mtls:
+    mode: DISABLE
+```
+
+``` sh
+# curl http://sample-service-sample-service-helm:15555/js
+Upgrade Required# curl -v http://sample-service-sample-service-helm:15555/js
+*   Trying 10.96.197.127:15555...
+* Connected to sample-service-sample-service-helm (10.96.197.127) port 15555 (#0)
+> GET /js HTTP/1.1
+> Host: sample-service-sample-service-helm:15555
+> User-Agent: curl/7.88.1
+> Accept: */*
+>
+< HTTP/1.1 426 Upgrade Required
+< server: envoy
+< date: Tue, 05 Dec 2023 14:18:22 GMT
+< content-type: text/plain
+< content-length: 16
+< x-envoy-upstream-service-time: 49
+<
+* Connection #0 to host sample-service-sample-service-helm left intact
+Upgrade Required# curl -v http://sample-service-js:8080
+*   Trying 10.96.216.16:8080...
+* Connected to sample-service-js (10.96.216.16) port 8080 (#0)
+> GET / HTTP/1.1
+> Host: sample-service-js:8080
+> User-Agent: curl/7.88.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< content-type: text/plain
+< date: Tue, 05 Dec 2023 14:18:43 GMT
+< content-length: 32
+< x-envoy-upstream-service-time: 22
+< server: envoy
+<
+You have reached sample service
+* Connection #0 to host sample-service-js left intact
+
+# curl --http1.0 -v http://sample-service-js:8080
+*   Trying 10.96.216.16:8080...
+* Connected to sample-service-js (10.96.216.16) port 8080 (#0)
+> GET / HTTP/1.0
+> Host: sample-service-js:8080
+> User-Agent: curl/7.88.1
+> Accept: */*
+>
+< HTTP/1.1 426 Upgrade Required
+< content-length: 16
+< content-type: text/plain
+< date: Tue, 05 Dec 2023 14:19:32 GMT
+< server: istio-envoy
+< connection: close
+<
+* Closing connection 0
+```
+
 ## 疑問
 
 - Namespace って、区切られた間でできないことってある？
   - どれくらいの粒度で区切るのがいい？
+- ns の作成、ラベル付与って helm で無理なん？
 
 ## Links
 

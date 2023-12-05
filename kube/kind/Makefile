@@ -15,7 +15,7 @@ init:
 	kind load --name local-dev docker-image my-nginx:latest
 	kind load --name local-dev docker-image golang-grpc:latest
 	helm install sample-service ./sample-service-helm --set service.type=NodePort --set service.nodePort=31234
-	kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
+	# kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
 	# helm upgrade --install ingress-nginx ingress-nginx \
 	# 	--repo https://kubernetes.github.io/ingress-nginx \
 	# 	--namespace ingress-nginx --create-namespace

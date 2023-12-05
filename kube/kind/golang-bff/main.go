@@ -9,7 +9,6 @@ import (
 	pb "github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/resolver"
 )
 
 func main() {
@@ -21,13 +20,13 @@ func main() {
 
 	// https://christina04.hatenablog.com/entry/grpc-client-side-lb
 	// こちらの対応も必要！
-	resolver.SetDefaultScheme("dns")
+	// resolver.SetDefaultScheme("dns")
 
 	conn, err := grpc.DialContext(
 		ctx,
 		fmt.Sprintf("%s:%s", host, port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
+		// grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 	)
 	if err != nil {
 		log.Fatal("client connection error:", err)
