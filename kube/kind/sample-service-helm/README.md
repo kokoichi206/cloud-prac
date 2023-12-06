@@ -57,7 +57,39 @@ $ capsh --decode=00000000a80425fb
 0x00000000a80425fb=cap_chown,cap_dac_override,cap_fowner,cap_fsetid,cap_kill,cap_setgid,cap_setuid,cap_setpcap,cap_net_bind_service,cap_net_raw,cap_sys_chroot,cap_mknod,cap_audit_write,cap_setfcap
 ```
 
+### Mkdir
+
+この辺は何で制限されるか。
+
+``` sh
+# log
+│ 2023/12/06 15:05:20 failed to create directory:mkdir app-tmp: read-only file system                               │
+│ Stream closed EOF for default/golang-bff-server-f8fdb44f-tvdr5 (golang-bff)
+```
+
+read-only を外した。
+
+``` sh
+# わかった, current root (top) が root の持ち物であるため nonroot でフォルダの作成に失敗している。
+│ 2023/12/06 15:06:49 failed to create directory:mkdir app-tmp: permission denied                                   │
+```
+
+nonroot の uid, gid を求めるために debug オプションをつけたイメージで shell に入る。
+
+``` sh
+/app-workdir $ id
+uid=65532(nonroot) gid=65532(nonroot) groups=65532(nonroot)
+```
+
+kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container --image=ubuntu target=golang-grpc
+kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container image=ubuntu target=target-container
+
 ## Links
 
 - [Pod でルートファイルシステムを読み取り専用にする securityContext.readOnlyRootFilesystem](https://kakakakakku.hatenablog.com/entry/2022/04/19/104313)
   - nginx で特定ファイルへの書き込みを許可する
+- [nobody in ubuntu](https://wiki.ubuntu.com/nobody)
+  - 65534
+- [エフェメラルコンテナ](https://kubernetes.io/ja/docs/concepts/workloads/pods/ephemeral-containers/)
+  - 1.23 からデフォルトで有効？
+  - まだ β ？

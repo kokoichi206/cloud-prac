@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"path/filepath"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	pb "github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf"
@@ -11,8 +14,18 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+const (
+	// api が動くディレクトリからの相対パス。
+	tmpDir = "tmp"
+)
+
 func main() {
 	ctx := context.Background()
+
+	if err := os.Mkdir(tmpDir, 0777); err != nil {
+		// log.Fatal("failed to create directory:", err)
+		fmt.Println("failed to create directory:", err)
+	}
 
 	// grpc に接続する。
 	host := "golang-grpc-server"
@@ -44,6 +57,15 @@ func main() {
 	})
 
 	r.GET("/go", func(c *gin.Context) {
+		path := filepath.Join(tmpDir, fmt.Sprintf("%d", time.Now().UnixMilli()))
+		f, err := os.Create(path)
+		if err != nil {
+			c.Error(err)
+			return
+		}
+		defer f.Close()
+		f.Write([]byte("accessed!"))
+
 		ctx := c.Request.Context()
 		res, err := gprcClient.Health(ctx, &pb.HealthRequest{})
 		if err != nil {
