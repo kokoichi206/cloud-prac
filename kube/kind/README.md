@@ -353,6 +353,11 @@ You have reached sample service
 * Closing connection 0
 ```
 
+### Links
+
+- [protocol をきちんとすることが大事](https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/#explicit-protocol-selection)
+  - prefix of port name
+
 ## 疑問
 
 - Namespace って、区切られた間でできないことってある？
