@@ -226,3 +226,82 @@ lrwxrwxrwx 1 ubuntu ubuntu 0 Dec  5 18:44 /proc/self/ns/uts -> 'uts:[4026531838]
   - コンテナが利用するもので、Docker デーモンが利用するものではない
   - proc などを Read-Only でマウントしている
 
+## 攻撃手法
+
+- アタックサーフェスを最小にする！
+- コンテナランタイムへの攻撃
+  - Docker API への攻撃（コンテナランタイムに Docker を使用してる場合）
+    - Docker API に外部から攻撃できるようになってないか
+- コンテナの設定不備
+  - capability
+    - CAP_SYSLOG
+      - dmesg の削除
+    - CAP_NET_RAW
+      - ARP スプーフィングなどの、ネットワークを盗聴する攻撃
+    - CAP_SYS_ADMIN
+      - ケーパビリティの中で**特に権限が高い**
+      - 権限昇格
+  - 特権コンテナ
+    - 全てのデバイスファイルにアクセスできる
+    - セキュリティオプションが無効になってるものがある
+      - 分離レベルが弱い
+- DOS 攻撃
+  - Fork 攻撃
+    - Fok Bomb
+  - ディスク容量の圧迫
+- DooD: Docker Outside Of Docker
+
+``` sh
+docker run --rm -it alpine sh
+
+# Fork 爆弾
+f() { f | f & }; f
+```
+
+- Linux カーネルへの攻撃
+  - Dirty COW
+    - 非特権ユーザーが読み取り専用のメモリへ書き込めてしまう
+  - Dirty Pipe
+- サプライチェーン攻撃
+  - サードパーティに位置するソフトウェアを改ざんし、アプリケーションやその実行環境で悪意のあるコードを実行する
+  - 対策
+    - 信頼できるイメージを使用する
+    - イメージに対してマルウェアスキャンを実行する
+
+## いい感じのコンテナイメージ
+
+- コンテナイメージの実物
+  - **ファイルシステムをレイヤとして保持して１つにまとめたもの**
+- Trivy
+  - subcommands
+    - image
+    - filesystem
+    - config
+      - Dockerfile や k8s マニフェストなどの設定ミスを検出する
+  - flags
+    - --ignore-unfixed
+
+``` sh
+# trivy による Dockerfile のスキャン。
+## ===== 便利そう。 =====
+trivy config .
+
+# trivy config --policy policy/ --namespaces user .
+```
+
+- Secret の取り扱い
+  - docker build の --secret オプション
+  - Docker 18.06 からイメージビルドのバックエンドとして Buildkit ！！
+
+``` sh
+docker build -t go-test:latest --build-arg GIT_PASSWORD=top-secret .
+
+docker save go-test:latest | tar -xC dump/
+```
+
+- ベストプラクティス
+  - イメージはタグだけではなく、イメージのダイジェストを指定する方がいい
+    - 乗っ取られた場合に検知可能
+  - Distroless イメージの使用
+    - **アタックサーフェスを減らす！**
+    - 静的リンクされたシングルバイナリになる Go, Rust とは抜群に相性がいい
