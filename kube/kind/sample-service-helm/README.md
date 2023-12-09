@@ -84,6 +84,22 @@ uid=65532(nonroot) gid=65532(nonroot) groups=65532(nonroot)
 kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container --image=ubuntu target=golang-grpc
 kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container image=ubuntu target=target-container
 
+## Gateway API
+
+### [GAMMA](https://gateway-api.sigs.k8s.io/concepts/gamma/?h=gamma)
+
+- Service Mesh でのルーティング
+  - [East/West traffic ともいうらしい](https://gateway-api.sigs.k8s.io/concepts/glossary/#eastwest-traffic)
+    - 外界とのやり取りは North/South traffic
+- [KubeCon: What's New in gRPC ](https://kccncna2023.sched.com/event/1R2ut/whats-new-in-grpc-kevin-nilson-gina-yeh-google-richard-belleville-independent?iframe=no&w=100%&sidebar=yes&bg=no)
+  - 動画10分くらいの位置
+
+[Getting started](https://gateway-api.sigs.k8s.io/guides/)
+
+### Links
+
+- [KubeCon: Modern Load Balancing](https://kccncna2023.sched.com/event/1R2s6?iframe=no)
+
 ## Links
 
 - [Pod でルートファイルシステムを読み取り専用にする securityContext.readOnlyRootFilesystem](https://kakakakakku.hatenablog.com/entry/2022/04/19/104313)

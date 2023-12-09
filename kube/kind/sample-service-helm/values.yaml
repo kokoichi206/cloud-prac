@@ -117,3 +117,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+lbSettings:
+  istio:
+    enabled: false

@@ -27,7 +27,6 @@ podSecurityContext:
   {}
   # fsGroup: 2000
 
-# この辺ちゃんと使えるようになりたいかも。
 securityContext:
   capabilities:
     drop:

@@ -70,20 +70,12 @@ kind load --name local-dev docker-image golang-bff:latest
 
 
 
-helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
-
-# this is not working...?
-helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
-
-helm uninstall -n kube-system metrics-server metrics-server/metrics-server
-
 # this is not working...?
 ## this causes Backoff...
 helm upgrade -n kube-system --install -f values.yaml metrics-server metrics-server/metrics-server
 
-
+# NOT specified values.yaml
 helm upgrade -n kube-system --install metrics-server metrics-server/metrics-server
-
 
 helm uninstall -n kube-system metrics-server metrics-server/metrics-server
 
