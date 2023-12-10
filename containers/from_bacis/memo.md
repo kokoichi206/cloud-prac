@@ -297,6 +297,8 @@ trivy config .
 docker build -t go-test:latest --build-arg GIT_PASSWORD=top-secret .
 
 docker save go-test:latest | tar -xC dump/
+
+# あれだと思う, deploy 用の IMAGE を用意する時だと build 時に渡した argument は残ってなさそう！！
 ```
 
 - ベストプラクティス
@@ -305,3 +307,73 @@ docker save go-test:latest | tar -xC dump/
   - Distroless イメージの使用
     - **アタックサーフェスを減らす！**
     - 静的リンクされたシングルバイナリになる Go, Rust とは抜群に相性がいい
+
+## コンテナランタイムの運用
+
+- ケーパビリティの制限
+  - 不要なものの削除
+- システムコールの制限
+  - Seccomp
+    - ファイルレスマルウェア？
+    - Seccomp プロファイルの自動生成
+      - strace, eBPF などで可能
+      - docker-slim を使った生成方法
+- docker-slim
+  - コンテナイメージのサイズを圧縮するためのツール
+  - **アプリケーションを動的解析して Seccomp プロファイルや AppArmor プロファイルを作成する機能もある**
+  - k8s なら SPO とかも
+    - https://kubernetes.io/blog/2023/05/18/seccomp-profiles-edge/
+- リソースの制限
+  - デフォルトでは何もかかってない
+  - CPU, memory
+    - k8s の request, limit でいい？
+  - process 数
+    - pids-limit at Docker
+  - ストレージ使用量
+    - storage-opt at Docker
+- cpulimit, ulimit
+  - cgroups v1 + Rootless モードの時は、リソース制限が適用できない
+    - **cgroups 以外の仕組みでリソース制限**が必要
+  - SIGSTOP, SIGCONT シグナルを常にプロセスに送ることで、使用量を制御する
+    - ここを解除できる capability もあるよ！
+      - CAP_SYS_RESOURCE, CAP_SYS_ADMIN
+- ユーザー
+  - User Namespace
+    - ホストの UID/GID とは別に、ホスト側の一般ユーザーをコンテナの root に対応させたりできる
+      - **root として動作することが求められるアプリケーションを安全に動かせる**
+- Rootless モード
+  - **Docker のランタイム自体も非 root で動かす！**
+    - ランタイムに脆弱性があった倍位の被害軽減
+- No New Privileges による権限昇格の防止
+- Network
+  - デフォルトでは全ての Pod が互いに通信することが可能
+    - **コンテナに侵入された場合に横展開される**
+  - Network Policy → 特定の Pod 同士のみが疎通可能にする
+  - Istio → アプリ同士の認証
+- Falco
+- Sysdig
+- **コンテナランタイム**
+  - EKS の場合って、どうなってるんだろ
+
+``` sh
+curl http://169.254.169.254/latest/meta-data/iam/security-credentials
+```
+
+- コンテナの操作ログの記録
+  - Docker API のアクセスログ
+  - Docker events でコンテナの実行ログを取得
+
+これよさそう！
+https://github.com/docker/docker-bench-security
+
+``` sh
+git clone https://github.com/docker/docker-bench-security.git
+cd docker-bench-security
+sudo sh docker-bench-security.sh
+```
+
+## Links
+
+- [OWASP: Docker Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html)
+- [OWASP: k8s security](https://cheatsheetseries.owasp.org/cheatsheets/Kubernetes_Security_Cheat_Sheet.html#assess-the-privileges-used-by-containers)
+- [CIS Benchmark](https://www.cisecurity.org/cis-benchmarks)
