@@ -1,3 +1,4 @@
+{{- if .Values.service.gamma }}
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: GRPCRoute
 metadata:
@@ -8,3 +9,4 @@ spec:
     kind: Service
     name: golang-grpc-server
     port: 8080
+{{- end }}

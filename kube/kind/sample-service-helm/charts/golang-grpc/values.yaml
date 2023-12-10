@@ -38,11 +38,13 @@ securityContext:
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
+  allowPrivilegeEscalation: false
 
 service:
   type: ClusterIP
   port: 8080
   enabled: true
+  gamma: false
 
 ingress:
   enabled: false

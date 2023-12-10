@@ -84,6 +84,12 @@ uid=65532(nonroot) gid=65532(nonroot) groups=65532(nonroot)
 kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container --image=ubuntu target=golang-grpc
 kubectl -n default debug golang-grpc-server-6cc858b489-9jb7l -it my-ephemeral-container image=ubuntu target=target-container
 
+### no new privileges
+
+setuid されたバイナリなどを通した権限昇格を防ぐ。
+
+k8s では [allowPrivilegeEscalation](https://kubernetes.io/ja/docs/tasks/configure-pod-container/security-context/) で制御する。
+
 ## Gateway API
 
 ### [GAMMA](https://gateway-api.sigs.k8s.io/concepts/gamma/?h=gamma)
