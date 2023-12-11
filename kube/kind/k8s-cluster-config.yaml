@@ -12,3 +12,8 @@ nodes:
   - containerPort: 31234
     hostPort: 9900
     protocol: TCP
+- role: worker
+  kubeadmConfigPatches:
+  - |
+    kind: KubeletConfiguration
+    podPidsLimit: 40
