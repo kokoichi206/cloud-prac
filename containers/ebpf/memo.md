@@ -55,6 +55,85 @@
     - カーネルにロードされてイベントに**アタッチしたらすぐに**観測開始！
   - **サイドカーモデルの欠点を解決！**
 
+## sec 2
+
+- [BCC: BPF Compiler Collection](https://github.com/iovisor/bcc)
+
+``` sh
+# not worked...
+# pip3 install bcc
+# pip3 install numba
+apt install python3-bpfcc
+
+$ python3 hello.py
+bpf: Failed to load program: Operation not permitted
+
+Traceback (most recent call last):
+  File "hello.py", line 14, in <module>
+    b.attach_kprobe(event=syscall, fn_name="hello")
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 679, in attach_kprobe
+    fn = self.load_func(fn_name, BPF.KPROBE)
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 408, in load_func
+    raise Exception("Need super-user privileges to run")
+Exception: Need super-user privileges to run
+
+
+$ sudo python3 hello.py
+
+node-1854076 [003] d..3 959752.559641: 0: Hello World              sh-1854077 [002] d..3 959752.567826: 0: Hello World     cpuUsage.sh-1854078 [002] d..3 959752.588893: 0: Hello World     cpuUsage.sh-1854079 [000] d..3 959752.599838: 0: Hello World     cpuUsage.sh-1854080 [001] d..3 959752.604636: 0: Hello World     cpuUsage.sh-1854081 [003] d..3 959752.609435: 0: Hello World     cpuUsage.sh-1854082 [003] d..3 959752.614165: 0: Hello World     start_mysql-1854083 [003] d..3 959753.165679: 0: Hello World     cpuUsage.sh-1854084 [003] d..3 959753.620526: 0: Hello World     cpuUsage.sh-1854085 [003] d..3 959753.630123: 0: Hello World     cpuUsage.sh-1854087 [003] d..3 959753.638078: 0: Hello World     cpuUsage.sh-1854089 [000] d..3 959753.644629: 0: Hello World     start_mysql-1854091 [002] d..3 959754.173340: 0: Hello World ...
+```
+
+- ヘルパ関数
+  - extended BPF とクラシックな BPF の違いの１つ
+  - eBPF プログラムが Linux のシステムと相互作用をするための関数の集まり
+- eBPF はなんらかの**イベントにアタッチ**させる必要がある！
+
+``` sh
+# bpf_trace_printk が出力を送る擬似ファイル先。
+$ sudo ls -la /sys/kernel/debug/tracing/trace_pipe
+-r--r--r-- 1 root root 0 Jan  1  1970 /sys/kernel/debug/tracing/trace_pipe
+
+$ sudo cat /sys/kernel/debug/tracing/trace_pipe
+```
+
+- BPF Map
+  - eBPF プログラムとユーザ空間の両方からアクセスできるデータ構造！
+  - BPF (NOT eBPF) には存在しない機能！
+  - 広義の key-value ストア
+  - kernel v5.1 から排他制御のためのスピンロックなど
+- ハッシュテーブル Map
+
+``` sh
+# BCC のマクロ。
+BPF_HASH(counter_table);
+```
+
+- BCC から使える C 言語は、C そのものではない
+  - C ににてるが、いくつかのショートカット・マクロを使えるようにしたもの
+  - BCC が正しい C 言語に変換してコンパイルされる
+- PERF リングバッファ Map
+  - BPF リングバッファも新しくある
+- **リングバッファ**
+  - メモリの一部の領域を論理的な輪のように使う
+  - 書き込みと読み出しのポインタが別々
+  - 読み出しが書き込みに追いついたら、それ以上読み出せない
+  - 書き込みが読み出しに追いついたら、**ドロップカウンタ**が増加する
+- `bpf_get_current_pid_tgid`
+  - ６４ビットの値を返す
+    - 上位の 32 bit がプロセス ID を示す
+    - 下位の 32 bit がスレッド ID を示す
+- イベントが実行されたコンテクスト情報を eBPF から取得できる
+- 関数呼び出し
+  - コンパイラによりジャンプ命令になる
+    - cf: 関数のインライン展開等
+- **Tail Call**: 末尾呼び出し
+  - 別の eBPF プログラムを呼び出して実行し、実行時のコンテクストを置き換える
+    - execve システムコールが普通のプロセスに対してしていることと近い！
+    - つまり！**Tail Call の実行が完了しても呼び出し元の eBPF プログラムには復帰しない！**
+  - eBPF 固有の概念ではない
+    - スタックオーバーフローを防ぐ
+    - スタックが 512 バイトしかない eBPF においてはメリットが大きいってだけ
+
 ## Links
 
 - https://github.com/lizrice/ebpf-beginners?tab=readme-ov-file
