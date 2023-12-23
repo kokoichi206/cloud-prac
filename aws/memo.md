@@ -1,0 +1,21 @@
+## [re:Invent Recap](https://www.youtube.com/watch?v=KTYaoY5x3LU&ab_channel=JAWS-UG%E6%A8%AA%E6%B5%9C)
+
+- [Access Grants](https://aws.amazon.com/jp/blogs/news/scaling-data-access-with-amazon-s3-access-grants/)
+  - cf:
+    - Bucket Policy/IAM
+      - バケット単位の設定
+      - バケットポリシーが複雑になる
+    - S3 Access point
+      - 複数のバケットのアクセスを一元的に管理できる
+      - ユーザー側がアクセスポイントを知る必要がある
+  - 一時的なアクセス認証
+- [S3 Express One Zone](https://aws.amazon.com/jp/blogs/news/new-amazon-s3-express-one-zone-high-performance-storage-class/)
+  - 標準ストレージクラスの最大10倍のパフォーマンス
+  - 最も頻繁にアクセスされるデータや最も要求の厳しいアプリに最適
+  - 10k-1MB が顕著に速度向上 70% ほど。。。
+  - スタンダードより7倍ほど高い
+- **AWS Backup 自動復元テスト**
+  - Backup vault
+  - リストアにかかる時間の評価など
+- EFS レプリケーションのフェイルバック機能
+- DR 周りの整備により、ミッションクリティカルな領域でもクラウドに乗り始めている！
