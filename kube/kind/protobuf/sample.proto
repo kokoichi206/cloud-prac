@@ -9,7 +9,9 @@ service Sample {
   rpc Health(HealthRequest) returns (HealthReply);
 }
 
-message HealthRequest {}
+message HealthRequest {
+  int64 size_kb = 1;
+}
 message HealthReply {
   string message = 1;
 }
