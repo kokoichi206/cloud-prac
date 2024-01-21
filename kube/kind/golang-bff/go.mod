@@ -4,8 +4,8 @@ go 1.21.2
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf v0.0.0-20231123103043-88e4acc18cd0
-	google.golang.org/grpc v1.59.0
+	github.com/kokoichi206/cloud-prac/kube/kind/protobuf/gen/go/protobuf v0.0.0-20240120093207-2bac28d767f7
+	google.golang.org/grpc v1.60.1
 )
 
 require (
@@ -28,11 +28,11 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.12.0 // indirect
-	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
-	golang.org/x/text v0.12.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20240116215550-a9fa1716bcac // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

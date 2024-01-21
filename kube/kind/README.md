@@ -350,6 +350,65 @@ You have reached sample service
 - [protocol をきちんとすることが大事](https://istio.io/latest/docs/ops/configuration/traffic-management/protocol-selection/#explicit-protocol-selection)
   - prefix of port name
 
+## 負荷分散とか
+
+`MaxConnectionAge` を入れたところ、以下のようなエラーが出るようになった。
+
+``` sh
+
+default golang-bff-server-766f55788b-l26ld golang-bff [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+default golang-bff-server-766f55788b-l26ld golang-bff Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+default golang-bff-server-766f55788b-l26ld golang-bff [GIN-debug] Listening and serving HTTP on :8080
+default golang-bff-server-766f55788b-l26ld golang-bff error: rpc error: code = Unavailable desc = closing transport due to: connection error: desc = "error reading from server: EOF", received prior goaway: code: NO_ERROR, debug data: "max_age"
+default golang-bff-server-766f55788b-l26ld golang-bff [GIN] 2024/01/20 - 07:10:17 | 200 | 50.980960523s |     10.244.1.21 | GET      "/go"
+default golang-bff-server-766f55788b-l26ld golang-bff Error #01: rpc error: code = Unavailable desc = closing transport due to: connection error: desc = "error reading from server: EOF", received prior goaway: code: NO_ERROR, debug data: "max_age"
+```
+
+- 毎回出るわけではない
+- 全てのエンドポイントで出るわけではない
+  - 時間がかかる部分の方が多め
+
+### ローカルで実験
+
+以下は全て Unary の endpoint で確認
+
+- レスポンスにかかった時間よりは、データサイズに依存しそう
+  - MaxConnectionAge = 15s, response 30s とかにして実験してた
+  - レスポンスサイズを 1KB, 31KB, 33KB, 1MB, 100MB など変えて確認
+    - `received message larger than max` みたいなエラーが出ることが多かったが, `max_age` が出ることも多々あった
+- ReadBufferSize, WriteBufferSize がデフォルトの 32KB だった
+  - データサイズが `WriteBufferSize` を越した時に複数に分けて送られるはずで、ここを越した時に GOAWAY が出るのかと思ってた
+  - そこで色々と調整してみたけどうまくいかず。。。
+    - server
+      - WriteBufferSize
+      - ReadBufferSize
+    - client
+      - WithInitialWindowSize
+      - WithInitialConnWindowSize
+  - 参考
+    - [github: issue](https://github.com/grpc/grpc-go/issues/6019#issuecomment-1766167499)
+    - [stream に関する issue](https://github.com/grpc/grpc-go/issues/6504)
+- 常にエラーが出るわけではない
+
+```
+error at grpc client: rpc error: code = ResourceExhausted desc = grpc: received message larger than max (20480326 vs. 4194304)
+```
+
+- GOAWAY について
+  - [RFC7540](https://datatracker.ietf.org/doc/html/rfc7540#section-6.8) で定義された http2 の frame の1つ
+  - [HTTP/2 GOAWAY (qiita)](https://qiita.com/tatsuhiro-t/items/d9322b312f63488d6493)
+- grpc
+  - HTTP/2
+    - コネクション (TCP)
+      - GOAWAY フレームが送信された時に新規のストリームの作成を止めて、TCP コネクションを終了させる
+      - [GOAWAY Frame](https://github.com/grpc/grpc/blob/master/doc/PROTOCOL-HTTP2.md#goaway-frame)
+    - ストリーム
+      - [ストリームの状態遷移](https://summerwind.jp/docs/rfc7540/#section5-1)
+    - メッセージ
+    - フレーム
+
+TODO: 未解決
+
 ## 疑問
 
 - Namespace って、区切られた間でできないことってある？
