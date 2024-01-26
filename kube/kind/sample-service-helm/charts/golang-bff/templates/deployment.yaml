@@ -36,6 +36,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: GRPC_GO_LOG_SEVERITY_LEVEL
+              value: info
+            - name: GRPC_GO_LOG_VERBOSITY_LEVEL
+              value: "2"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

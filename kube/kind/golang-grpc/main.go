@@ -37,8 +37,8 @@ func (h *handler) Health(ctx context.Context, in *pb.HealthRequest) (*pb.HealthR
 			x += math.Sqrt(x)
 		}
 	}(ctx)
-	// why this is not working?
-	time.Sleep(30 * time.Second)
+	// why this is not working sometimes?
+	time.Sleep(15 * time.Second)
 
 	return &pb.HealthReply{
 		// Message: "{\"health\": \"ok\"}",
@@ -55,14 +55,25 @@ func main() {
 
 	const MAX_BUFFER_SIZE int = (1 << 27)
 	fmt.Printf("MAX_BUFFER_SIZE: %v\n", MAX_BUFFER_SIZE)
+	const WINDOW_SIZE int32 = (1 << 27)
 
 	s := grpc.NewServer(
+		grpc.KeepaliveEnforcementPolicy(keepalive.EnforcementPolicy{
+			MinTime:             2 * time.Second,
+			PermitWithoutStream: false,
+		}),
 		grpc.KeepaliveParams(keepalive.ServerParameters{
-			MaxConnectionAge: 15 * time.Second,
+			MaxConnectionAge:      30 * time.Second,
+			MaxConnectionAgeGrace: 15 * time.Second,
 		}),
 
-		// grpc.ReadBufferSize(MAX_BUFFER_SIZE),
-		// grpc.WriteBufferSize(MAX_BUFFER_SIZE),
+		// 効果なかった気がする。
+		grpc.ReadBufferSize(MAX_BUFFER_SIZE),
+		grpc.WriteBufferSize(MAX_BUFFER_SIZE),
+
+		// 効果なかった気がする。
+		grpc.InitialWindowSize(WINDOW_SIZE),
+		grpc.InitialConnWindowSize(WINDOW_SIZE),
 	)
 	pb.RegisterSampleServer(s, h)
 

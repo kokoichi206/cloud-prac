@@ -1,0 +1,272 @@
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:17 INFO: [balancer] base.baseBalancer: got new ClientConn state:  {{[{Addr: "10.244.1.11:8080", ServerName: "", } {Addr: "10.244.1.9:8080", ServerName: "", }] [{[{Addr: "10.244.1.11:8080", ServerName: "", }] <nil>} {[{Addr: "10.244.1.9:8080", ServerName: "", }] <nil>}] <nil> <nil>} <nil>}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:17 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [transport] [client-transport 0x4000064240] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [transport] [client-transport 0x4000064240] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #7] Subchannel picks a new address "10.244.1.9:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, CONNECTING
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:19:19 INFO: [transport] [server-transport 0x4000582340] Closing: EOF
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:19:19 INFO: [transport] [server-transport 0x4000582340] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:19:19 INFO: [transport] [server-transport 0x40001fed00] Closing: EOF
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:19:19 INFO: [transport] [server-transport 0x40001fed00] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [transport] [client-transport 0x4000548900] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [transport] [client-transport 0x4000548900] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:19 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [transport] [client-transport 0x4000549200] Closing: connection error: desc = "error reading from server: EOF"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [transport] [client-transport 0x40006526c0] Closing: connection error: desc = "error reading from server: EOF"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [transport] [client-transport 0x4000549200] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff error: rpc error: code = Unavailable desc = closing transport due to: connection error: desc = "error reading from server: EOF", received prior goaway: code: NO_ERROR, debug data: "max_age"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff [GIN] 2024/01/25 - 11:19:34 | 500 | 33.287915973s |      10.244.1.8 | GET      "/go/?size=390076"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:34 INFO: [transport] [client-transport 0x40006526c0] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1] Channel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #7] Subchannel picks a new address "10.244.1.9:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1] Channel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1] Channel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:35 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc MAX_BUFFER_SIZE: 134217728
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:19:35 INFO: [core] [Server #1] Server created
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:19:35 INFO: [core] [Server #1 ListenSocket #2] ListenSocket created
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:37 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:48 INFO: [core] [Channel #1] Resolver state updated: {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Addresses": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addr": "10.244.1.9:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     },
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addr": "10.244.1.11:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Endpoints": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addresses": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Addr": "10.244.1.9:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     },
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addresses": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Addr": "10.244.1.11:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "ServiceConfig": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Attributes": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff } ()
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:48 INFO: [balancer] base.baseBalancer: got new ClientConn state:  {{[{Addr: "10.244.1.9:8080", ServerName: "", } {Addr: "10.244.1.11:8080", ServerName: "", }] [{[{Addr: "10.244.1.9:8080", ServerName: "", }] <nil>} {[{Addr: "10.244.1.11:8080", ServerName: "", }] <nil>}] <nil> <nil>} <nil>}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:48 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [transport] [client-transport 0x4000652900] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [transport] [client-transport 0x4000652900] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [core] [Channel #1 SubChannel #7] Subchannel picks a new address "10.244.1.9:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, CONNECTING
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:19:49 INFO: [transport] [server-transport 0x4000582680] Closing: EOF
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:19:49 INFO: [transport] [server-transport 0x4000582680] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:49 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:19:50 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc x: 1.227810367891813e+18
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:02 INFO: [transport] [client-transport 0x4000548fc0] loopyWriter exiting with error: finished processing active streams while in draining mode
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff error: rpc error: code = ResourceExhausted desc = grpc: received message larger than max (10240326 vs. 4194304)
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff [GIN] 2024/01/25 - 11:20:02 | 500 | 30.353405264s |      10.244.1.8 | GET      "/go/?size=10000"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:02 INFO: [transport] [client-transport 0x4000548fc0] Closing: connection error: desc = "error reading from server: read tcp 10.244.1.10:33988->10.244.1.9:8080: use of closed network connection"
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:02 INFO: [transport] [server-transport 0x40005824e0] loopyWriter exiting with error: finished processing active streams while in draining mode
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:02 INFO: [transport] [server-transport 0x40005824e0] Closing: read tcp 10.244.1.9:8080->10.244.1.10:33988: use of closed network connection
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:02 INFO: [transport] [server-transport 0x40005824e0] Error closing underlying net.Conn during Close: close tcp 10.244.1.9:8080->10.244.1.10:33988: use of closed network connection
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to IDLE
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:04 INFO: [transport] [server-transport 0x400060b1e0] Closing: EOF
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [transport] [client-transport 0x4000064480] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [core] [Channel #1 SubChannel #7] Subchannel picks a new address "10.244.1.9:8080" to connect
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:04 INFO: [transport] [server-transport 0x400060b1e0] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [transport] [client-transport 0x4000064480] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:04 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [transport] [client-transport 0x4000652000] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [transport] [client-transport 0x4000652000] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:20:05 INFO: [transport] [server-transport 0x40001ec9c0] Closing: EOF
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc 2024/01/25 11:20:05 INFO: [transport] [server-transport 0x40001ec9c0] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:05 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:6):{{Addr: "10.244.1.11:8080", ServerName: "", }} SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [transport] [client-transport 0x4000652240] Closing: connection error: desc = "error reading from server: EOF"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [transport] [client-transport 0x4000064240] Closing: connection error: desc = "error reading from server: EOF"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [transport] [client-transport 0x4000064240] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [transport] [client-transport 0x4000652240] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff error: rpc error: code = Unavailable desc = closing transport due to: connection error: desc = "error reading from server: EOF", received prior goaway: code: NO_ERROR, debug data: "max_age"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff [GIN] 2024/01/25 - 11:20:10 | 500 | 30.797366514s |      10.244.1.8 | GET      "/go/?size=390070"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:10 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:11 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:13 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to IDLE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [core] [Channel #1 SubChannel #6] Subchannel picks a new address "10.244.1.11:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [core] Creating new client transport to "{Addr: \"10.244.1.11:8080\", ServerName: \"golang-grpc-server:8080\", }": connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 WARNING: [core] [Channel #1 SubChannel #6] grpc: addrConn.createTransport failed to connect to {Addr: "10.244.1.11:8080", ServerName: "golang-grpc-server:8080", }. Err: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to TRANSIENT_FAILURE, last error: connection error: desc = "transport: Error while dialing: dial tcp 10.244.1.11:8080: connect: connection refused"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:15 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, TRANSIENT_FAILURE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [core] [Channel #1] Resolver state updated: {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Addresses": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addr": "10.244.1.9:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Endpoints": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Addresses": [
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         {
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Addr": "10.244.1.9:8080",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "ServerName": "",
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Attributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "BalancerAttributes": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff           "Metadata": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff         }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff       "Attributes": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff     }
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   ],
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "ServiceConfig": null,
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff   "Attributes": null
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff } ()
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [balancer] base.baseBalancer: got new ClientConn state:  {{[{Addr: "10.244.1.9:8080", ServerName: "", }] [{[{Addr: "10.244.1.9:8080", ServerName: "", }] <nil>}] <nil> <nil>} <nil>}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [core] [Channel #1 SubChannel #6] Subchannel Connectivity change to SHUTDOWN
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [core] [Channel #1 SubChannel #6] Subchannel deleted
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:18 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057acc0, SHUTDOWN
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [transport] [client-transport 0x4000548900] Closing: connection error: desc = "received goaway and there are no active streams"
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1] Channel Connectivity change to IDLE
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1 SubChannel #7] Subchannel picks a new address "10.244.1.9:8080" to connect
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [transport] [client-transport 0x4000548900] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, CONNECTING
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1] Channel Connectivity change to CONNECTING
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:21 INFO: [transport] [server-transport 0x4000582340] Closing: EOF
+default golang-grpc-server-845b6b6dd5-sc65j golang-grpc 2024/01/25 11:20:21 INFO: [transport] [server-transport 0x4000582340] loopyWriter exiting with error: transport closed by client
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1 SubChannel #7] Subchannel Connectivity change to READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [balancer] base.baseBalancer: handle SubConn state change: 0x400057ad50, READY
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [roundrobin] roundrobinPicker: Build called with info: {map[SubConn(id:7):{{Addr: "10.244.1.9:8080", ServerName: "", }}]}
+default golang-bff-server-7bc88dd5cf-bzg9d golang-bff 2024/01/25 11:20:21 INFO: [core] [Channel #1] Channel Connectivity change to READY
+default golang-grpc-server-845b6b6dd5-czpm4 golang-grpc MAX_BUFFER_SIZE: 134217728

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 
@@ -12,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/resolver"
+	"google.golang.org/grpc/status"
 )
 
 const (
@@ -45,8 +47,17 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingConfig": [{"round_robin":{}}]}`),
 
-		// grpc.WithInitialWindowSize(MAX_WINDOW_SIZE),
-		// grpc.WithInitialConnWindowSize(MAX_WINDOW_SIZE),
+		grpc.WithDefaultCallOptions(
+			grpc.MaxCallRecvMsgSize(math.MaxInt64),
+			grpc.MaxCallSendMsgSize(math.MaxInt64),
+		),
+
+		// 効果なかった気がする。
+		grpc.WithInitialWindowSize(MAX_WINDOW_SIZE),
+		grpc.WithInitialConnWindowSize(MAX_WINDOW_SIZE),
+
+		// 効果なかった気がする。
+		grpc.WithNoProxy(),
 	)
 	if err != nil {
 		log.Fatal("client connection error:", err)
@@ -122,7 +133,7 @@ func main() {
 	r.GET("/go/large-large", func(c *gin.Context) {
 		ctx := c.Request.Context()
 		msg, err := gprcClient.Health(ctx, &pb.HealthRequest{
-			SizeKb: 1000,
+			SizeKb: 10000,
 		})
 		if msg != nil {
 			fmt.Printf("len(msg): %v\n", len(msg.Message))
@@ -164,6 +175,15 @@ func main() {
 			}
 		}
 		if err != nil {
+			// status.FromContextError(err)
+			s, ok := status.FromError(err)
+			if ok {
+				fmt.Printf("s: %v\n", s)
+				fmt.Printf("s.Code(): %v\n", s.Code())
+				fmt.Printf("s.Message(): %v\n", s.Message())
+				fmt.Printf("s.Err(): %v\n", s.Err())
+				fmt.Printf("s.Details(): %v\n", s.Details())
+			}
 			fmt.Println("error:", err)
 			c.JSON(500, gin.H{
 				"message": fmt.Sprintf("error at grpc client: %v", err),
