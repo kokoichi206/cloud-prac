@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-04-18T19-09-19Z
+    environment:
+      MINIO_ROOT_USER: root_user
+      MINIO_ROOT_PASSWORD: root_password
+      # console から作成しなくて済むよう、環境変数に設定。
+      # 注): この方法は非推奨になった。
+      # see: https://min.io/docs/minio/linux/administration/identity-access-management/minio-user-management.html#minio-users-root:~:text=later%20deprecates%20the%20following%20variables%20used%20for%20setting%20or%20updating
+      # 今後は mc コマンドで作成することになる。
+      # MINIO_ACCESS_KEY: 3AFDH6SThcVDnI7FsACg
+      # MINIO_SECRET_KEY: thG04kib7mgHwjfstUCpqsb1RQyzZitmbulZKWpI
+    command: server --console-address ":9090" /data
+    ports:
+      - 9001:9000
+      - 9091:9090
+    volumes:
+      - ./data:/data
+
+  minio-mc:
+    image: minio/mc:RELEASE.2024-04-18T16-45-29Z
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+        /usr/bin/mc ls myminio;
+        # ----- alias の作成 -----;
+        until /usr/bin/mc alias set myminio http://minio:9000 root_user root_password; do echo '...waiting...' && sleep 1; done;
+        # ----- access key の作成 (sdk で使用) -----;
+        /usr/bin/mc admin user svcacct add --access-key '3AFDH6SThcVDnI7FsACg' --secret-key 'thG04kib7mgHwjfstUCpqsb1RQyzZitmbulZKWpI' myminio root_user;
+
+        # ----- bucket の作成 ----;
+        /usr/bin/mc mb myminio/mybucket;
+        # ----- object の作成 ----;
+        /usr/bin/mc cp /testdata/test.txt myminio/mybucket/myobject;
+
+        /usr/bin/mc ls myminio;
+        exit 0;
+      "
+    volumes:
+      - ./testdata/:/testdata
